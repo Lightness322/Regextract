@@ -2,8 +2,6 @@ import { Height } from "react-animate-height"
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IoClose, IoSettingsOutline } from "react-icons/io5"
 import Label from "./Label"
-import { deleteMeasure as handleDeleteMeasure } from "../../services/apiMeasures"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 interface ICheckBoxProps {
   className?: string
@@ -24,22 +22,6 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
   handleShowOptions,
   deleteExtractionOption,
 }) => {
-  // const queryClient = useQueryClient()
-
-  const {
-    mutate: deleteMeasure,
-    isPending: isDeleting,
-    error: deleteError,
-  } = useMutation({
-    mutationFn: handleDeleteMeasure,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["measures"] })
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
-
   return (
     <div
       className={`grid grid-cols-[250px,_min-content] items-center ${
@@ -64,7 +46,6 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
               <button
                 className="text-red-700 hover:text-red-500"
                 type="button"
-                // onClick={() => deleteMeasure(label)}
                 onClick={() => deleteExtractionOption!(label)}
               >
                 <IoClose size="30" />

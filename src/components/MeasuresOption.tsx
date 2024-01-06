@@ -2,7 +2,6 @@ import CheckBox from "./UI/CheckBox"
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IMeasure } from "../types/measuresTypes"
 import { formatLabel } from "../utils/helpers"
-import { FaCheck } from "react-icons/fa"
 import { IoClose } from "react-icons/io5"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -10,7 +9,6 @@ import {
   deleteMeasure as handleDeleteMeasure,
   updateMeasures as handleUpdateMeasures,
 } from "../services/apiMeasures"
-import { IoSettingsOutline } from "react-icons/io5"
 import AnimateHeight, { Height } from "react-animate-height"
 import { CiSquarePlus } from "react-icons/ci"
 import Button from "./UI/Button"
@@ -34,8 +32,8 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
 
   const {
     mutate: updateMeasures,
-    isPending: isColorUpdating,
-    error: colorUpdatingError,
+    // isPending: isColorUpdating,
+    // error: colorUpdatingError,
   } = useMutation({
     mutationFn: handleUpdateMeasures,
     onSuccess: () => {
@@ -52,8 +50,8 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
 
   const {
     mutate: deleteMeasure,
-    isPending: isDeleting,
-    error: deleteError,
+    // isPending: isDeleting,
+    // error: deleteError,
   } = useMutation({
     mutationFn: handleDeleteMeasure,
     onSuccess: () => {

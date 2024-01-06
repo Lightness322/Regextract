@@ -9,7 +9,6 @@ import {
   deleteWord as handleDeleteWord,
   updateWords as handleUpdateWords,
 } from "../services/apiWords"
-import { FaCheck } from "react-icons/fa"
 import { IoClose } from "react-icons/io5"
 import { CiSquarePlus } from "react-icons/ci"
 
@@ -32,8 +31,8 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
 
   const {
     mutate: updateWords,
-    isPending: isColorUpdating,
-    error: colorUpdatingError,
+    // isPending: isColorUpdating,
+    // error: colorUpdatingError,
   } = useMutation({
     mutationFn: handleUpdateWords,
     onSuccess: () => {
@@ -58,8 +57,8 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
 
   const {
     mutate: deleteWord,
-    isPending: isDeletingWord,
-    error: deleteError,
+    // isPending: isDeletingWord,
+    // error: deleteError,
   } = useMutation({
     mutationFn: handleDeleteWord,
     onSuccess: () => {

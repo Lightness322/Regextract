@@ -1,4 +1,4 @@
-import { IMeasure } from "../data/measures"
+import { IMeasure } from "../types/measuresTypes"
 
 export function getMultiplier(
   quantityIndex: number,

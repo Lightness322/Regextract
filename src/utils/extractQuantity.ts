@@ -2,15 +2,14 @@ const measures = ["кг", "kg", "мл", "ml"]
 
 export function extractQuantity(patternArray: string[]) {
   const regExpQuantityColumn = patternArray.map((patternString) => {
-    let matchResult: string = ""
     let checkMeasureString: string = ""
     let quantity: number = 0
     let possibleMeasure: string = ""
     let matchResultArray: string[] = []
-    let quantitiesArray: number[] = []
+    const quantitiesArray: number[] = []
 
-    const startEdgeReg = "(^|[^0-9а-яa-z])"
-    const endEdgeReg = "([^0-9а-яa-z]|$)"
+    // const startEdgeReg = "(^|[^0-9а-яa-z])"
+    // const endEdgeReg = "([^0-9а-яa-z]|$)"
 
     const reg =
       /(\d+[^a-zа-я]?(((шт|бр)([^a-zа-я]|$))|(tabs|caps|капс|табл)))|(([^a-zа-я0-9]|^)(x|х|n|№)\s?\d+)/gim

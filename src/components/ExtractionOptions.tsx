@@ -1,24 +1,11 @@
 import { FieldValues, useForm } from "react-hook-form"
-import { extractColors } from "../utils/extractColors"
-import { capacities, lengths } from "../data/measures"
-import { extractQuantity } from "../utils/extractQuantity"
-import { extractSize } from "../utils/extractSize"
 import CheckBox from "./UI/CheckBox"
 import { columns } from "../data/columns"
 import Excel from "exceljs"
 import ColumnSelect from "./UI/ColumnSelect"
-import { useGetMeasures } from "../hooks/useGetMeasures"
-import { getDefaultValues } from "../utils/helpers"
-import { IMeasure, IMeasuresResponse } from "../types/measuresTypes"
-import { extractMeasures } from "../utils/extractMeasures"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import {
-  deleteMeasure as handleDeleteMeasure,
-  getMeasures,
-  insertMeasure as handleInsertMeasure,
-} from "../services/apiMeasures"
-import MeasureOption from "./MeasuresOption"
-import MeasureOptions from "./MeasuresOption"
+import { IMeasuresResponse } from "../types/measuresTypes"
+import { useQuery } from "@tanstack/react-query"
+import { getMeasures } from "../services/apiMeasures"
 import MeasuresOption from "./MeasuresOption"
 import { getWords } from "../services/apiWords"
 import WordsOption from "./WordsOption"
@@ -30,8 +17,6 @@ import { CiSquarePlus } from "react-icons/ci"
 import Button from "./UI/Button"
 import AnimateHeight, { Height } from "react-animate-height"
 import AddWordExtractionForm from "./AddWordExtractionForm"
-import { useGetPatternColumns } from "./useGetPatternColumn"
-import Loader from "./UI/Loader"
 
 interface IExtractionOptionsProps {
   sheet: Excel.Worksheet | undefined
@@ -60,8 +45,8 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
   const {
     data: measuresData,
     isLoading: isMeasuresLoading,
-    error: measuresError,
-  }: IMeasuresResponse = useQuery({
+  }: // error: measuresError,
+  IMeasuresResponse = useQuery({
     queryKey: ["measures"],
     queryFn: getMeasures,
   })
@@ -79,27 +64,11 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
 
   const {
     data: wordsData,
-    isLoading: isWordsLoading,
-    error: wordsError,
-  }: IMeasuresResponse = useQuery({
+  }: // isLoading: isWordsLoading,
+  // error: wordsError,
+  IMeasuresResponse = useQuery({
     queryKey: ["words"],
     queryFn: getWords,
-  })
-
-  const queryClient = useQueryClient()
-
-  const {
-    mutate: insertMeasure,
-    isPending: isInserting,
-    error: insertError,
-  } = useMutation({
-    mutationFn: handleInsertMeasure,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["measures"] })
-    },
-    onError: (error) => {
-      console.log(error)
-    },
   })
 
   const { handleSubmit, register } = useForm()
@@ -181,18 +150,12 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
         </div>
         <AnimateHeight duration={500} height={createRegExpButtonHeight}>
           <div className="flex justify-start">
-            {isRegExpCreating ? (
-              <div className="h-5 w-5">
-                <Loader />
-              </div>
-            ) : (
-              <Button
-                type="submit"
-                disabled={sheet === undefined || isRegExpCreating}
-              >
-                Создать регулярные выражения
-              </Button>
-            )}
+            <Button
+              type="submit"
+              disabled={sheet === undefined || isRegExpCreating}
+            >
+              Создать регулярные выражения
+            </Button>
           </div>
         </AnimateHeight>
         <div className="grid grid-cols-2">

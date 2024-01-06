@@ -7,7 +7,6 @@ import DropDownField from "./components/UI/DropDownField"
 import DownloadButtons from "./components/DownloadButtons"
 import Container from "./components/UI/Container"
 import { handleUploadFile } from "./utils/handleUploadFile"
-import Loader from "./components/UI/Loader"
 
 const fileTypes = ["XLSX"]
 

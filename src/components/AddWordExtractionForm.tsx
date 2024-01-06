@@ -1,13 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { createPortal } from "react-dom"
-import { FieldValues, useForm } from "react-hook-form"
-import { insertMeasure as handleInsertMeasure } from "../services/apiMeasures"
-import Input from "./UI/Input"
 import Label from "./UI/Label"
 import { CiSquarePlus } from "react-icons/ci"
 import { IoClose } from "react-icons/io5"
-import { IMeasure } from "../types/measuresTypes"
 import Button from "./UI/Button"
 import { IWord } from "../types/wordsTypes"
 import { insertWord as handleWordInsert } from "../services/apiWords"
@@ -28,8 +23,8 @@ const AddWordExtractionForm: React.FC<IAddWordExtractionFormProps> = ({
 
   const {
     mutate: insertWord,
-    isPending: isColorUpdating,
-    error: colorUpdatingError,
+    // isPending: isColorUpdating,
+    // error: colorUpdatingError,
   } = useMutation({
     mutationFn: handleWordInsert,
     onSuccess: () => {
@@ -123,16 +118,6 @@ const AddWordExtractionForm: React.FC<IAddWordExtractionFormProps> = ({
               </button>
             </td>
           </tr>
-          {/* <tr>
-            <td>
-              <button
-                type="button"
-                onClick={() => setTotalRows((qty) => qty + 1)}
-              >
-                add new
-              </button>
-            </td>
-          </tr> */}
         </tbody>
       </table>
       <div className="flex justify-center">
