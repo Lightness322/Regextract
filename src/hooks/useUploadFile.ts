@@ -1,7 +1,8 @@
 import Excel from "exceljs"
+
 import { columns } from "../data/columns"
 
-interface IHandleUploadFileArgs {
+interface IUseUploadFileParams {
   setFile: (file: File) => void
   setIsFileLoading: (isLoading: boolean) => void
   setWorkbook: (workbook: Excel.Workbook) => void
@@ -10,15 +11,15 @@ interface IHandleUploadFileArgs {
   productsColumnLetter: string
 }
 
-export function handleUploadFile({
+export function useUploadFile({
   setFile,
   setIsFileLoading,
   setWorkbook,
   setSheet,
   setPatternColumn,
   productsColumnLetter,
-}: IHandleUploadFileArgs) {
-  return async function handleChange(file: File) {
+}: IUseUploadFileParams) {
+  const uploadFile = async function (file: File) {
     setIsFileLoading(true)
 
     setFile(file)
@@ -54,4 +55,6 @@ export function handleUploadFile({
       setIsFileLoading(false)
     }
   }
+
+  return { uploadFile }
 }

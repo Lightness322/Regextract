@@ -9,18 +9,6 @@ export function getMultiplier(
     return 1
   }
 
-  // return quantityIndex > currentIndex
-  //   ? measures
-  //       .slice(currentIndex, quantityIndex + 1)
-  //       .reduce((aсс, measureObj) => {
-  //         return aсс * measureObj.coefficient
-  //       }, measures.at(currentIndex)!.coefficient)
-  //   : measures
-  //       .slice(quantityIndex, currentIndex + 1)
-  //       .reduce((aсс, measureObj) => {
-  //         return aсс / measureObj.coefficient
-  //       }, measures.at(currentIndex)!.coefficient)
-
   return (
     measures.at(quantityIndex)!.coefficient /
     measures.at(currentIndex)!.coefficient
@@ -71,4 +59,11 @@ export function getDefaultValues(measuresArray: object[]) {
 
 export function formatLabel(label: string) {
   return label.toLowerCase().replaceAll(" ", "")
+}
+
+export function includesEmptyFields(array: Array<object>) {
+  let values: Array<string | number> = []
+  array.forEach((obj) => (values = [...values, ...Object.values(obj)]))
+
+  return values.includes("")
 }

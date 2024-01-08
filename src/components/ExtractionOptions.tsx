@@ -1,22 +1,21 @@
-import { FieldValues, useForm } from "react-hook-form"
-import CheckBox from "./UI/CheckBox"
-import { columns } from "../data/columns"
-import Excel from "exceljs"
-import ColumnSelect from "./UI/ColumnSelect"
-import { IMeasuresResponse } from "../types/measuresTypes"
-import { useQuery } from "@tanstack/react-query"
-import { getMeasures } from "../services/apiMeasures"
-import MeasuresOption from "./MeasuresOption"
-import { getWords } from "../services/apiWords"
-import WordsOption from "./WordsOption"
-import { extractRegExp } from "../utils/extractRegExp"
-import Modal from "./UI/Modal"
 import { useState, useEffect } from "react"
+import { useCreateSemanticFile } from "../hooks/useCreateSemanticFile"
+import { useGetMeasures } from "../hooks/useGetMeasures"
+import { useGetWords } from "../hooks/useGetWords"
+import { FieldValues, useForm } from "react-hook-form"
+
+import { sortExtractionOption } from "../utils/sortExtractionOption"
+import { Height } from "react-animate-height"
+import Excel from "exceljs"
+
 import AddMeasureExtractionForm from "./AddMeasureExtractionForm"
-import { CiSquarePlus } from "react-icons/ci"
-import Button from "./UI/Button"
-import AnimateHeight, { Height } from "react-animate-height"
 import AddWordExtractionForm from "./AddWordExtractionForm"
+import ExtractionTypesFields from "./ExtractionTypesFields"
+import CreateRegExpButton from "./UI/CreateRegExpButton"
+import UploadFileParams from "./UploadFileParams"
+import ErrorMessage from "./UI/ErrorMessage"
+import Loader from "./UI/Loader"
+import Modal from "./UI/Modal"
 
 interface IExtractionOptionsProps {
   sheet: Excel.Worksheet | undefined
@@ -35,71 +34,29 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
   productsColumnLetter,
   setProductsColumnLetter,
 }) => {
-  const [isMeasuresModalShow, setIsMeasuresModalShow] = useState<boolean>(false)
-  const [isWordsModalShow, setIsWordsModalShow] = useState<boolean>(false)
   const [createRegExpButtonHeight, setCreateRegExpButtonHeight] =
     useState<Height>(0)
-  const [isRegExpCreating, setIsRegExpCreating] = useState<boolean>(false)
   const [regExpColumnLetter, setRegExpColumnLetter] = useState<string>("E")
 
-  const {
-    data: measuresData,
-    isLoading: isMeasuresLoading,
-  }: // error: measuresError,
-  IMeasuresResponse = useQuery({
-    queryKey: ["measures"],
-    queryFn: getMeasures,
-  })
+  const [isMeasuresModalShow, setIsMeasuresModalShow] = useState<boolean>(false)
+  const [isWordsModalShow, setIsWordsModalShow] = useState<boolean>(false)
 
-  !isMeasuresLoading &&
-    measuresData!.sort((a, b) => {
-      if (a.label > b.label) {
-        return 1
-      }
-      if (a.label < b.label) {
-        return -1
-      }
-      return 0
-    })
+  const { measuresData, isMeasuresLoading, measuresError } = useGetMeasures()
 
-  const {
-    data: wordsData,
-  }: // isLoading: isWordsLoading,
-  // error: wordsError,
-  IMeasuresResponse = useQuery({
-    queryKey: ["words"],
-    queryFn: getWords,
-  })
+  const { wordsData, isWordsLoading, wordsError } = useGetWords()
 
   const { handleSubmit, register } = useForm()
 
-  async function onSubmit(formData: FieldValues) {
-    setIsRegExpCreating(true)
-
-    if (formData.headers) {
-      patternColumn = patternColumn.slice(1)
-    }
-
-    const completeRegExpsArray = extractRegExp({
-      formData,
+  const { createSemanticFile, isRegExpCreating, setIsRegExpCreating } =
+    useCreateSemanticFile({
       measuresData,
       wordsData,
+      workbook,
+      sheet,
       patternColumn,
+      regExpColumnLetter,
+      setObjUrl,
     })
-
-    sheet!.getColumn(columns.indexOf(regExpColumnLetter) + 1).values =
-      completeRegExpsArray
-
-    const bytes = await workbook!.xlsx.writeBuffer()
-
-    const newTableData = new Blob([bytes], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    })
-
-    setObjUrl(URL.createObjectURL(newTableData))
-
-    setIsRegExpCreating(false)
-  }
 
   useEffect(() => {
     if (sheet !== undefined) {
@@ -109,7 +66,27 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
     }
   }, [sheet])
 
-  if (!measuresData || !wordsData) return <div>...loading</div>
+  function onSubmit(formData: FieldValues) {
+    setIsRegExpCreating(true)
+
+    createSemanticFile(formData)
+  }
+
+  if (isMeasuresLoading || isWordsLoading)
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <div className="-translate-y-20 text-primary-color">
+          <Loader size="big" />
+        </div>
+      </div>
+    )
+
+  if (wordsError || measuresError)
+    return <ErrorMessage error={wordsError || measuresError} />
+
+  sortExtractionOption(measuresData!)
+
+  sortExtractionOption(wordsData!)
 
   return (
     <>
@@ -117,103 +94,39 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
         isModalShow={isMeasuresModalShow}
         setIsModalShow={setIsMeasuresModalShow}
       >
-        <AddMeasureExtractionForm setIsModalShow={setIsMeasuresModalShow} />
+        <AddMeasureExtractionForm
+          measuresData={measuresData!}
+          setIsModalShow={setIsMeasuresModalShow}
+        />
       </Modal>
       <Modal
         isModalShow={isWordsModalShow}
         setIsModalShow={setIsWordsModalShow}
       >
-        <AddWordExtractionForm setIsModalShow={setIsWordsModalShow} />
+        <AddWordExtractionForm
+          wordsData={wordsData!}
+          setIsModalShow={setIsWordsModalShow}
+        />
       </Modal>
       <form className="flex flex-col gap-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center gap-x-5">
-          <ColumnSelect
-            label="Столбец товаров"
-            formValue="products"
-            register={register}
-            value={productsColumnLetter}
-            setValue={setProductsColumnLetter}
-          ></ColumnSelect>
-          <ColumnSelect
-            label="Столбец регулярки"
-            formValue="regExp"
-            register={register}
-            value={regExpColumnLetter}
-            setValue={setRegExpColumnLetter}
-          ></ColumnSelect>
-          <CheckBox
-            className="grid-cols-[110px,_min-content]"
-            label="Заголовки"
-            formValue="headers"
-            register={register}
-          ></CheckBox>
-        </div>
-        <AnimateHeight duration={500} height={createRegExpButtonHeight}>
-          <div className="flex justify-start">
-            <Button
-              type="submit"
-              disabled={sheet === undefined || isRegExpCreating}
-            >
-              Создать регулярные выражения
-            </Button>
-          </div>
-        </AnimateHeight>
-        <div className="grid grid-cols-2">
-          <div>
-            <div className="text-2xl font-semibold mb-3 flex gap-x-4 items-center">
-              <span>Извлечение величин</span>
-              <button
-                className="text-green-700 hover:text-green-500"
-                type="button"
-                onClick={() => setIsMeasuresModalShow(true)}
-              >
-                <CiSquarePlus size="35" />
-              </button>
-            </div>
-            <div className="flex flex-col gap-y-3">
-              {measuresData.map((measureObj) => (
-                <MeasuresOption
-                  label={measureObj.label}
-                  register={register}
-                  measures={measureObj.params}
-                  key={measureObj.label}
-                />
-              ))}
-              <CheckBox
-                label="Извлечь количество"
-                formValue="quantities"
-                register={register}
-              ></CheckBox>
-              <CheckBox
-                label="Извлечь размер"
-                formValue="sizes"
-                register={register}
-              ></CheckBox>
-            </div>
-          </div>
-          <div>
-            <div className="text-2xl font-semibold mb-3 flex gap-x-4 items-center">
-              <span>Извлечение слов</span>
-              <button
-                className="text-green-700 hover:text-green-500"
-                type="button"
-                onClick={() => setIsWordsModalShow(true)}
-              >
-                <CiSquarePlus size="35" />
-              </button>
-            </div>
-            <div className="flex flex-col gap-y-3">
-              {wordsData.map((wordObj) => (
-                <WordsOption
-                  words={wordObj.params}
-                  label={wordObj.label}
-                  register={register}
-                  key={wordObj.label}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <UploadFileParams
+          register={register}
+          productsColumnLetter={productsColumnLetter}
+          regExpColumnLetter={regExpColumnLetter}
+          setProductsColumnLetter={setProductsColumnLetter}
+          setRegExpColumnLetter={setRegExpColumnLetter}
+        />
+        <CreateRegExpButton
+          buttonHeight={createRegExpButtonHeight}
+          isRegExpCreating={isRegExpCreating}
+        />
+        <ExtractionTypesFields
+          register={register}
+          measuresData={measuresData}
+          wordsData={wordsData}
+          setIsMeasuresModalShow={setIsMeasuresModalShow}
+          setIsWordsModalShow={setIsWordsModalShow}
+        />
       </form>
     </>
   )

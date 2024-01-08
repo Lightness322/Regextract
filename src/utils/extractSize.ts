@@ -4,7 +4,7 @@ export function extractSize(patternArray: string[]) {
     let firstNumber: number = 0
     let secondNumber: number = 0
 
-    const reg = /([0-9]+[.,][0-9]+|[0-9]+)[^0-9]([0-9]+[.,][0-9]+|[0-9]+)/im
+    const reg = /([0-9]+[.,][0-9]+|[0-9]+)[x|х]([0-9]+[.,][0-9]+|[0-9]+)/im
 
     if (patternString.match(reg) !== null) {
       matchResult = patternString.match(reg)!.at(0)!
@@ -53,8 +53,6 @@ export function extractSize(patternArray: string[]) {
 
     return resultReg
   })
-
-  //   const resultQuantityColumnString = regExpQuantityColumn.join("\n")
 
   return regExpQuantityColumn
 }

@@ -1,12 +1,13 @@
-import { FieldValues } from "react-hook-form"
-import { IMeasureData } from "../types/measuresTypes"
-import { IWordData } from "../types/wordsTypes"
 import { extractMeasures } from "./extractMeasures"
-import { formatLabel } from "./helpers"
 import { extractColors } from "./extractColors"
 import { extractQuantity } from "./extractQuantity"
 import { extractSize } from "./extractSize"
 import { extractWords } from "./extractWords"
+import { formatLabel } from "./helpers"
+
+import { FieldValues } from "react-hook-form"
+import { IMeasureData } from "../types/measuresTypes"
+import { IWordData } from "../types/wordsTypes"
 
 interface IExtractRegExpArgs {
   patternColumn: string[]
@@ -21,6 +22,10 @@ export function extractRegExp({
   measuresData,
   wordsData,
 }: IExtractRegExpArgs) {
+  if (formData.headers) {
+    patternColumn = patternColumn.slice(1)
+  }
+
   const regExpsArray: string[][] = []
   const completeRegExpsArray = formData.headers ? ["Regex"] : []
 
@@ -31,13 +36,13 @@ export function extractRegExp({
   )
 
   wordsData!.forEach((wordObj) => {
-    console.log(wordObj.label)
     if (
       formData[formatLabel(wordObj.label)] &&
       wordObj.label === "Извлечь цвета"
     ) {
       regExpsArray.push(extractColors(patternColumn, wordObj.params))
     }
+
     if (
       formData[formatLabel(wordObj.label)] &&
       wordObj.label !== "Извлечь цвета"
@@ -52,7 +57,7 @@ export function extractRegExp({
 
   for (let i = 0; i < patternColumn.length; i++) {
     const strReg = regExpsArray.reduce((acc, elem) => {
-      return `${elem.at(i) ? `(?=.*${elem.at(i)})` : ""}` + acc
+      return `${elem.at(i) ? `(?=.*(${elem.at(i)}))` : ""}` + acc
     }, "")
     completeRegExpsArray.push(strReg)
   }

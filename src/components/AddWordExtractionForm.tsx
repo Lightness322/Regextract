@@ -1,39 +1,31 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { useInsertWordOption } from "../hooks/useInsertWordOption"
+
+import { includesEmptyFields } from "../utils/helpers"
+import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
+import { IWord, IWordData } from "../types/wordsTypes"
+
+import AddWordExtractionFormTable from "./AddWordExtractionFormTable"
 import Label from "./UI/Label"
-import { CiSquarePlus } from "react-icons/ci"
-import { IoClose } from "react-icons/io5"
 import Button from "./UI/Button"
-import { IWord } from "../types/wordsTypes"
-import { insertWord as handleWordInsert } from "../services/apiWords"
+import Loader from "./UI/Loader"
 
 interface IAddWordExtractionFormProps {
-  setIsModalShow: (isShow: boolean) => void
+  wordsData: IWordData[]
+  setIsModalShow: TypeSetStateFunction<boolean>
 }
 
 const array: IWord[] = [{ variants: "" }]
 
 const AddWordExtractionForm: React.FC<IAddWordExtractionFormProps> = ({
+  wordsData,
   setIsModalShow,
 }) => {
-  const [currentWords, setCurrentWords] = useState<IWord[]>(array)
   const [label, setLabel] = useState<string>("Извлечь ...")
+  const [currentWords, setCurrentWords] = useState<IWord[]>(array)
 
-  const queryClient = useQueryClient()
-
-  const {
-    mutate: insertWord,
-    // isPending: isColorUpdating,
-    // error: colorUpdatingError,
-  } = useMutation({
-    mutationFn: handleWordInsert,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["words"] })
-      setIsModalShow(false)
-    },
-    onError: (error) => {
-      console.log(error)
-    },
+  const { insertWord, isWordInserting } = useInsertWordOption({
+    setIsModalShow,
   })
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -45,83 +37,42 @@ const AddWordExtractionForm: React.FC<IAddWordExtractionFormProps> = ({
     })
   }
 
-  function handleChangeWords(
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) {
-    setCurrentWords((prevState) =>
-      prevState.map((wordObj, i) => {
-        if (index === i) {
-          return { ...wordObj, variants: e.target.value }
-        }
-        return { ...wordObj }
-      })
-    )
-  }
+  const isLabelExist = wordsData.map((wordObj) => wordObj.label).includes(label)
+
+  const isEmptyFieldsExist = includesEmptyFields(currentWords)
 
   return (
     <form
-      className="bg-white p-20 flex flex-col gap-y-5 rounded-xl shadow-xl shadow-[#0000005f]"
+      className="bg-white p-20 flex flex-col gap-y-5 rounded-xl shadow-xl shadow-[#0000005f] max-[810px]:px-10 max-[500px]:px-5"
       onSubmit={(e) => handleSubmit(e)}
     >
-      <div className="px-4 flex gap-x-5">
+      <div className="px-4 flex gap-x-5 max-[500px]:flex-col gap-y-2 max-[450px]:px-1">
         <Label>Название</Label>
         <input
           className="p-0 border border-solid border-[#ca8544] rounded-md text-center w-full"
-          value={label}
           onChange={(e) => setLabel(e.target.value)}
+          value={label}
         />
       </div>
-      <table className="text-left border-spacing-x-4 border-spacing-y-1 border-separate">
-        <thead>
-          <tr>
-            <th>Величина</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentWords.map((wordObj, i) => (
-            <tr key={i}>
-              <td>
-                <input
-                  className="p-0 border border-solid border-[#ca8544] rounded-md text-center w-[500px]"
-                  value={wordObj.variants}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    handleChangeWords(e, i)
-                  }}
-                />
-              </td>
-              <td className="flex justify-center items-center">
-                <button
-                  className="text-red-700 hover:text-red-500"
-                  type="button"
-                  onClick={() => {
-                    setCurrentWords((curArray) =>
-                      curArray.filter((_, ind) => ind !== i)
-                    )
-                  }}
-                >
-                  <IoClose size="30" />
-                </button>
-              </td>
-            </tr>
-          ))}
-          <tr>
-            <td>
-              <button
-                className="text-green-700 hover:text-green-500"
-                type="button"
-                onClick={() =>
-                  setCurrentWords((curArray) => [...curArray, { variants: "" }])
-                }
-              >
-                <CiSquarePlus size="30" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="flex justify-center">
-        <Button type="submit">Добавить</Button>
+      <AddWordExtractionFormTable
+        currentWords={currentWords}
+        setCurrentWords={setCurrentWords}
+      />
+      <div className="flex justify-center relative">
+        <Button type="submit" disabled={isLabelExist || isEmptyFieldsExist}>
+          {isWordInserting ? (
+            <span className="flex h-[28px] w-[84px] justify-center">
+              <Loader />
+            </span>
+          ) : (
+            <span>Добавить</span>
+          )}
+        </Button>
+        {isLabelExist && (
+          <div className="absolute bottom-[-35px] text-red-500">
+            Такое название уже существует
+          </div>
+        )}
       </div>
     </form>
   )

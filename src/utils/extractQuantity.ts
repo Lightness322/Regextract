@@ -1,4 +1,4 @@
-const measures = ["кг", "kg", "мл", "ml"]
+import { possibleMeasures } from "../data/possibleMeasures"
 
 export function extractQuantity(patternArray: string[]) {
   const regExpQuantityColumn = patternArray.map((patternString) => {
@@ -8,11 +8,8 @@ export function extractQuantity(patternArray: string[]) {
     let matchResultArray: string[] = []
     const quantitiesArray: number[] = []
 
-    // const startEdgeReg = "(^|[^0-9а-яa-z])"
-    // const endEdgeReg = "([^0-9а-яa-z]|$)"
-
     const reg =
-      /(\d+[^a-zа-я]?(((шт|бр)([^a-zа-я]|$))|(tabs|caps|капс|табл)))|(([^a-zа-я0-9]|^)(x|х|n|№)\s?\d+)/gim
+      /(\d+[^a-zа-я]?(((шт|бр)([^a-zа-я]|$))|(tabs|caps|капс|табл)))|(([^a-zа-я0-9]|^)(x|х|№)\s?\d+)/gim
 
     if (patternString.match(reg) !== null) {
       matchResultArray = patternString.match(reg)!
@@ -33,7 +30,7 @@ export function extractQuantity(patternArray: string[]) {
 
       if (
         !possibleMeasure ||
-        (possibleMeasure && !measures.includes(possibleMeasure))
+        (possibleMeasure && !possibleMeasures.includes(possibleMeasure))
       ) {
         quantity = parseInt(matchResult.match(/\d+/)!.at(0)!)
       }
@@ -45,7 +42,7 @@ export function extractQuantity(patternArray: string[]) {
 
     const resultReg: string = quantitiesArray
       .map((quantity) => {
-        return `(?=.*(${quantity}([^0-9]+)?(шт|бр|tabs|caps|капс))|((x|х|№)\\s?${quantity}))`
+        return `(?=.*((${quantity}([^0-9]+)?(бр|шт|tabs|caps|капс|табл))|((x|х|№)\\s?${quantity})))`
       })
       .join("")
 

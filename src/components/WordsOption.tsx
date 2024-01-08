@@ -1,16 +1,15 @@
-import CheckBox from "./UI/CheckBox"
+import { useState } from "react"
+import { useChangeWordOption } from "../hooks/useChangeWordOption"
+import { useShowSaveWordButton } from "../hooks/useShowSaveWordButton"
+
+import { formatLabel } from "../utils/helpers"
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IWord } from "../types/wordsTypes"
-import { formatLabel } from "../utils/helpers"
-import { useState } from "react"
-import AnimateHeight, { Height } from "react-animate-height"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import {
-  deleteWord as handleDeleteWord,
-  updateWords as handleUpdateWords,
-} from "../services/apiWords"
-import { IoClose } from "react-icons/io5"
-import { CiSquarePlus } from "react-icons/ci"
+import { Height } from "react-animate-height"
+
+import WordsOptionTable from "./WordsOptionTable"
+import SaveButton from "./UI/SaveButton"
+import CheckBox from "./CheckBox"
 
 interface IWordsOptionProps {
   register: UseFormRegister<FieldValues>
@@ -22,92 +21,34 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
   label,
   words,
 }) => {
-  const [height, setHeight] = useState<Height>(0)
-  const [buttonsHeight, setButtonsHeight] = useState<Height>(0)
+  const [optionTableHeight, setOptionTableHeight] = useState<Height>(0)
 
   const [currentWords, setCurrentWords] = useState<IWord[]>(words)
 
-  const queryClient = useQueryClient()
-
   const {
-    mutate: updateWords,
-    // isPending: isColorUpdating,
-    // error: colorUpdatingError,
-  } = useMutation({
-    mutationFn: handleUpdateWords,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["words"] })
-      setButtonsHeight(0)
-      setCurrentWords((curWords) =>
-        curWords.sort((a, b) => {
-          if (a.variants > b.variants) {
-            return 1
-          }
-          if (a.variants < b.variants) {
-            return -1
-          }
-          return 0
-        })
-      )
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
+    saveButtonHeight,
+    setSaveButtonHeight,
+    updateWords,
+    deleteWord,
+    isWordsUpdating,
+    isWordDeleting,
+  } = useChangeWordOption({ setCurrentWords })
 
-  const {
-    mutate: deleteWord,
-    // isPending: isDeletingWord,
-    // error: deleteError,
-  } = useMutation({
-    mutationFn: handleDeleteWord,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["words"] })
-    },
-    onError: (error) => {
-      console.log(error)
-    },
+  const { handleShowSaveWordButton } = useShowSaveWordButton({
+    saveButtonHeight,
+    setSaveButtonHeight,
+    words,
   })
 
   function handleShowOptions() {
-    if (height === 0) {
-      setHeight("auto")
+    if (optionTableHeight === 0) {
+      setOptionTableHeight("auto")
       setCurrentWords(words)
     }
-    if (height === "auto") {
-      setHeight(0)
-      setButtonsHeight(0)
+    if (optionTableHeight === "auto") {
+      setOptionTableHeight(0)
+      setSaveButtonHeight(0)
     }
-  }
-
-  function handleShowButtons(
-    e: React.ChangeEvent<HTMLInputElement>,
-    i: number
-  ) {
-    const defaultValue = words.filter((_, index) => i === index).at(0)!
-
-    if (defaultValue.variants !== e.target.value && !buttonsHeight) {
-      setButtonsHeight("auto")
-    }
-    if (defaultValue.variants === e.target.value && buttonsHeight) {
-      setButtonsHeight(0)
-    }
-  }
-
-  function handleChangeWords(
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) {
-    handleShowButtons(e, index)
-
-    setCurrentWords((prevState) =>
-      prevState.map((measureObj, i) => {
-        if (index === i) {
-          return { ...measureObj, variants: e.target.value }
-        }
-        return { ...measureObj }
-      })
-    )
   }
 
   words = [
@@ -128,80 +69,23 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
         label={`${label}`}
         formValue={formatLabel(label)}
         register={register}
-        height={height}
+        tableHeight={optionTableHeight}
         handleShowOptions={handleShowOptions}
         deleteExtractionOption={deleteWord}
+        isOptionDeleting={isWordDeleting}
       ></CheckBox>
-      <AnimateHeight height={buttonsHeight} duration={500}>
-        <button
-          type="button"
-          onClick={() => updateWords({ label, params: currentWords })}
-        >
-          Сохранить
-        </button>
-      </AnimateHeight>
-      <AnimateHeight duration={500} height={height}>
-        <table className="text-left border-spacing-x-4 border-spacing-y-1 border-separate mt-3">
-          <thead>
-            <tr>
-              <th>Величина</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentWords.map((word, i) => (
-              <tr key={i}>
-                <td>
-                  <input
-                    className="p-0 border border-solid border-[#ca8544] rounded-md text-center w-[500px]"
-                    value={word.variants}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleChangeWords(e, i)
-                    }}
-                  />
-                </td>
-                <td className="flex justify-center items-center">
-                  <button
-                    className="text-red-700 hover:text-red-500"
-                    type="button"
-                    onClick={() => {
-                      const newMeasures = currentWords.filter(
-                        (_, deleteIndex) => deleteIndex !== i
-                      )
-                      // updateWords({ label, params: newMeasures })
-
-                      setCurrentWords(newMeasures)
-                      setButtonsHeight("auto")
-                    }}
-                  >
-                    <IoClose size="30" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td>
-                <button
-                  className="text-green-700 hover:text-green-500"
-                  type="button"
-                  onClick={() => {
-                    // updateWords({
-                    //   label,
-                    //   params: [{ variants: "" }, ...currentWords],
-                    // })
-                    setCurrentWords((curWords) => [
-                      { variants: "" },
-                      ...curWords,
-                    ])
-                    setButtonsHeight("auto")
-                  }}
-                >
-                  <CiSquarePlus size="30" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </AnimateHeight>
+      <SaveButton
+        buttonHeight={saveButtonHeight}
+        updateFn={() => updateWords({ label, params: currentWords })}
+        isUpdating={isWordsUpdating}
+      />
+      <WordsOptionTable
+        currentWords={currentWords}
+        setCurrentWords={setCurrentWords}
+        handleShowSaveWordButton={handleShowSaveWordButton}
+        optionTableHeight={optionTableHeight}
+        setSaveButtonHeight={setSaveButtonHeight}
+      />
     </div>
   )
 }

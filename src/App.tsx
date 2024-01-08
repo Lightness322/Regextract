@@ -1,27 +1,31 @@
 import { useState } from "react"
-import ExtractionOptions from "./components/ExtractionOptions"
-import { FileUploader } from "react-drag-drop-files"
+import { useUploadFile } from "./hooks/useUploadFile"
+
 import Excel from "exceljs"
-import Header from "./components/Header"
-import DropDownField from "./components/UI/DropDownField"
-import DownloadButtons from "./components/DownloadButtons"
+
+import { FileUploader } from "react-drag-drop-files"
 import Container from "./components/UI/Container"
-import { handleUploadFile } from "./utils/handleUploadFile"
+import Header from "./components/Header"
+import ExtractionOptions from "./components/ExtractionOptions"
+import DropDownField from "./components/DropDownField"
+import DownloadButtons from "./components/DownloadButtons"
 
 const fileTypes = ["XLSX"]
 
 function App() {
   const [file, setFile] = useState<File | null>(null)
   const [isFileLoading, setIsFileLoading] = useState<boolean>(false)
+
   const [workbook, setWorkbook] = useState<Excel.Workbook | undefined>(
     undefined
   )
   const [sheet, setSheet] = useState<Excel.Worksheet | undefined>(undefined)
-  const [patternColumn, setPatternColumn] = useState<string[]>([])
-  const [objUrl, setObjUrl] = useState("")
-  const [productsColumnLetter, setProductsColumnLetter] = useState<string>("A")
 
-  const uploadFile = handleUploadFile({
+  const [patternColumn, setPatternColumn] = useState<string[]>([])
+  const [productsColumnLetter, setProductsColumnLetter] = useState<string>("A")
+  const [objUrl, setObjUrl] = useState("")
+
+  const { uploadFile } = useUploadFile({
     setFile,
     setIsFileLoading,
     setPatternColumn,
@@ -34,20 +38,21 @@ function App() {
     <Container>
       <Header />
       <FileUploader
-        onTypeError={(error: Error) => console.log(error)}
-        handleChange={(file: File) => uploadFile(file)}
-        types={fileTypes}
         dropMessageStyle={{
           fontSize: "0px",
           backgroundColor: "#d4ab85",
           borderRadius: "24px",
         }}
+        handleChange={(file: File) => uploadFile(file)}
+        onTypeError={(error: Error) => console.log(error)}
+        types={fileTypes}
         disabled={file || isFileLoading}
       >
         <DropDownField
           file={file}
           isFileLoading={isFileLoading}
           setFile={setFile}
+          setSheet={setSheet}
           setObjUrl={setObjUrl}
         />
       </FileUploader>
@@ -56,9 +61,9 @@ function App() {
         workbook={workbook}
         sheet={sheet}
         patternColumn={patternColumn}
-        setObjUrl={setObjUrl}
         productsColumnLetter={productsColumnLetter}
         setProductsColumnLetter={setProductsColumnLetter}
+        setObjUrl={setObjUrl}
       />
     </Container>
   )

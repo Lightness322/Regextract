@@ -1,5 +1,7 @@
-import { FieldValues, UseFormRegister } from "react-hook-form"
 import { columns } from "../../data/columns"
+
+import { FieldValues, UseFormRegister } from "react-hook-form"
+
 import Label from "./Label"
 
 interface IColumnSelectProps {

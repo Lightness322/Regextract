@@ -4,7 +4,7 @@ const Header: React.FC = () => {
       <div className="max-w-[1280px] mx-auto px-5">
         <img
           className="h-[50px]"
-          // src="https://manager.brandpolgroup.com/build/assets/bpg_h50.90099431.svg"
+          src="https://manager.brandpolgroup.com/build/assets/bpg_h50.90099431.svg"
         />
       </div>
     </div>

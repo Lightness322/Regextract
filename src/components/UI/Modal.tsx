@@ -1,6 +1,6 @@
 import React from "react"
-import { createPortal } from "react-dom"
 import { CSSTransition } from "react-transition-group"
+import { createPortal } from "react-dom"
 
 interface IModalProps {
   children: React.JSX.Element | React.JSX.Element[]
@@ -28,10 +28,11 @@ const Modal: React.FC<IModalProps> = ({
           unmountOnExit
         >
           <div
-            className="z-10 fixed h-screen w-screen left-0 top-0 bg-[#31313199] flex justify-center items-center"
+            className="z-10 fixed h-screen w-screen left-0 top-0 bg-[#31313199] flex justify-center items-center overflow-y-auto"
             onClick={() => setIsModalShow(false)}
           >
             <div
+              className="max-[810px]:w-[90%]"
               onClick={(e) => {
                 e.stopPropagation()
               }}

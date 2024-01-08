@@ -2,9 +2,9 @@ import { ReactNode } from "react"
 
 interface IButtonProps {
   children: ReactNode | JSX.Element
-  type: "button" | "submit"
-  disabled?: boolean
   onClick?: () => void
+  disabled?: boolean
+  type: "button" | "submit"
   size?: "md" | "sm"
   color?: "primary" | "green"
 }
@@ -41,13 +41,12 @@ const Button: React.FC<IButtonProps> = ({
     <button
       className={`${sizes[size]} rounded-lg text-white font-semibold ${
         disabled
-          ? "cursor-not-allowed bg-gray-500"
-          : `hover:bg-white hover:outline ${colors[color]}`
-      }
-          }`}
+          ? "bg-gray-500"
+          : `${colors[color]} hover:bg-white hover:outline`
+      }`}
+      onClick={onClick}
       type={type}
       disabled={disabled}
-      onClick={onClick}
     >
       {children}
     </button>

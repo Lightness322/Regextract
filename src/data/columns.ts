@@ -1,4 +1,4 @@
-export const columns = [
+export const columns: string[] = [
   "A",
   "B",
   "C",

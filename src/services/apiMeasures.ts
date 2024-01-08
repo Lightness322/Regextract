@@ -1,12 +1,12 @@
-import { IMeasureData } from "../types/measuresTypes"
 import supabase from "./supabase"
+
+import { IMeasureData } from "../types/measuresTypes"
 
 export async function getMeasures() {
   const { data: measures, error } = await supabase.from("measures").select("*")
 
   if (error) {
-    console.error(error)
-    throw new Error("Ошибка при получении величин")
+    throw new Error(error.message)
   }
 
   return measures
@@ -20,8 +20,7 @@ export async function updateMeasures({ label, params }: IMeasureData) {
     .select("*")
 
   if (error) {
-    console.error(error)
-    throw new Error("Ошибка при получении величин")
+    throw new Error(error.message)
   }
 
   return data
@@ -34,8 +33,7 @@ export async function insertMeasure({ label, params }: IMeasureData) {
     .select()
 
   if (error) {
-    console.error(error)
-    throw new Error("Ошибка при получении величин")
+    throw new Error(error.message)
   }
 
   return data
@@ -45,7 +43,6 @@ export async function deleteMeasure(label: string) {
   const { error } = await supabase.from("measures").delete().eq("label", label)
 
   if (error) {
-    console.error(error)
-    throw new Error("Ошибка при получении величин")
+    throw new Error(error.message)
   }
 }

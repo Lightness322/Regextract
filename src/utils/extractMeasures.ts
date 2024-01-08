@@ -1,5 +1,6 @@
-import { IMeasure } from "../types/measuresTypes"
 import { formatNumber, getMultiplier } from "./helpers"
+
+import { IMeasure } from "../types/measuresTypes"
 
 interface IQuantityObj {
   quantity: number
@@ -54,7 +55,7 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
           })
           .join("")
 
-        return quantitiesArray.length > 1 ? `(?=.*(${resultReg}))` : resultReg
+        return quantitiesArray.length > 1 ? `(?=.*${resultReg})` : resultReg
       })
       .join("")
 
