@@ -1,16 +1,8 @@
-import { Netlify } from "@netlify/edge-functions/node/dist/bootstrap/globals"
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseKey = await getApiKey()
-
 const supabaseUrl = "https://syqduwcsavdxsqlxwrwi.supabase.co"
-// const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5cWR1d2NzYXZkeHNxbHh3cndpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDM0MTYxNTUsImV4cCI6MjAxODk5MjE1NX0.Zz9tk4zvTDbRiUCzUIrvM8niQmRPEV-sc9yQvDdrHi4"
 const supabase = createClient(supabaseUrl, supabaseKey!)
 
 export default supabase
-
-export async function getApiKey() {
-  const supabaseKey = await Netlify.env.get("VITE_SUPABASE_API_KEY")
-
-  return supabaseKey
-}
