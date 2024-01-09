@@ -14,7 +14,7 @@
 - Фреймворк: React + TypeScript
 
 - Управление состоянием: React Query
--
+  
 - CSS фреймворк: Tailwind CSS
 
 - База данных: Supabase
