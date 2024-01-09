@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+## Описание проекта
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Regextract** - это небольшой проект, предназначенный для создания регулярных выражений. В данный момент я работаю аналитиком в сфере мониторинга цен. Регулярные выражения - один из главных инструментов для сопоставления и валидации товаров.
 
-Currently, two official plugins are available:
+### В проекте реализовано:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Адаптивная верстка.
+- Взаимодействие с API Supabase.
+- Возможность загружать свой Excel файл с товарами и скачивать новый Excel файл с готовыми регулярными выражениями.
+- Возможность выбирать нужные параметры для извлечения данных и добавлять свои собственные параметры.
 
-## Expanding the ESLint configuration
+### Используемые технологи
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Фреймворк: React + TypeScript
 
-- Configure the top-level `parserOptions` property like this:
+- Управление состоянием: React Query
+-
+- CSS фреймворк: Tailwind CSS
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- База данных: Supabase
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Библиотека для работы с Excel файлами: exceljs
+
+_[Посмотреть сайт на netlify](https://regextract.netlify.app/)_
+
+Для ознакомления можно воспользоваться этой Excel таблицей: [яндекс_диск](https://disk.yandex.ru/d/x25JX5fpS0NvLA)
+
+Проект еще будет дорабатываться с целью сделать создаваемые регулярные выражения точнее, а также учесть специфичные написания некоторых данных. Также планируется добавление аутентификации и авторизации.
