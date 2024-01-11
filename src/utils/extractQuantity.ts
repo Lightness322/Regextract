@@ -9,7 +9,7 @@ export function extractQuantity(patternArray: string[]) {
     const quantitiesArray: number[] = []
 
     const reg =
-      /(\d+[^a-zа-я]?(((шт|бр)([^a-zа-я]|$))|(tabs|caps|капс|табл)))|(([^a-zа-я0-9]|^)(x|х|№)\s?\d+)/gim
+      /(\d+\s*(шт|бр|tabs|caps|капс|табл|доз)([^a-zа-я0-9]|$))|(([^a-zа-я0-9]|^)(x|х|№)\s*\d+)/gim
 
     if (patternString.match(reg) !== null) {
       matchResultArray = patternString.match(reg)!
@@ -42,7 +42,7 @@ export function extractQuantity(patternArray: string[]) {
 
     const resultReg: string = quantitiesArray
       .map((quantity) => {
-        return `(?=.*((${quantity}([^0-9]+)?(бр|шт|tabs|caps|капс|табл))|((x|х|№)\\s?${quantity})))`
+        return `(?=.*((${quantity}\\s*(шт|бр|tabs|caps|капс|табл|доз))|((x|х|№)\\s*${quantity})))`
       })
       .join("")
 

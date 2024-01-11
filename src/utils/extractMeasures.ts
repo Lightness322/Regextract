@@ -11,6 +11,7 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
   const regExpMeasureColumn = patternArray.map((patternString) => {
     const quantitiesArray: IQuantityObj[] = []
 
+    const startEdgeReg = "([^а-яa-z]|^)"
     const endEdgeReg = "([^0-9а-яa-z]|$)"
 
     let index: number = 0
@@ -22,17 +23,26 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
 
       const quantityReg = "([0-9]+[.,][0-9]+|[0-9]+)"
 
-      const reg = new RegExp(`${quantityReg}\\s?(${measuresVariations})`, "gim")
+      const reg = new RegExp(
+        `(${startEdgeReg})${quantityReg}\\s*(${measuresVariations})`,
+        "gim"
+      )
 
       if (patternString.match(reg) !== null) {
         const matchResultArray: string[] = patternString.match(reg)!
 
-        matchResultArray.forEach((matchResult) =>
+        matchResultArray.forEach((matchResult) => {
+          const isFirstSymbolNumber = !isNaN(Number(matchResult.at(0)))
+
+          const quantity = isFirstSymbolNumber
+            ? parseFloat(matchResult.replace(",", "."))
+            : parseFloat(matchResult.slice(1).replace(",", "."))
+
           quantitiesArray.push({
-            quantity: parseFloat(matchResult.replace(",", ".")),
+            quantity,
             quantityIndex: index,
           })
-        )
+        })
       }
       index++
     }
@@ -49,7 +59,7 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
 
             return `(?=.*(${formatNumber(
               quantityObj.quantity * multiplier
-            )}\\s?(${measures.at(i)!.variants})${endEdgeReg}))${
+            )}\\s*(${measures.at(i)!.variants})${endEdgeReg}))${
               i !== measures.length - 1 ? "|" : ""
             }`
           })
