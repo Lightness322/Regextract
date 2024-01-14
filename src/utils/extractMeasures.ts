@@ -11,10 +11,19 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
   const regExpMeasureColumn = patternArray.map((patternString) => {
     const quantitiesArray: IQuantityObj[] = []
 
-    const startEdgeReg = "([^а-яa-z]|^)"
-    const endEdgeReg = "([^0-9а-яa-z]|$)"
+    const startEdgeReg = "((?<=[^0-9а-яa-z])|(?<=^))"
+    const endEdgeReg = "(?=[^0-9а-яa-z]|$)"
 
     let index: number = 0
+
+    // Удалить даты xx.xx.xxxx г
+    patternString = patternString.replaceAll(/\d+\.\d+\.\d+\s*г/gim, "null")
+
+    // Удалить размеры РАЗМЕРxРАЗМЕР
+    patternString = patternString.replaceAll(
+      /(\d+[.,]\d+|\d+)\s*([мm][мm]|с[мm]|s[мm]|м|m)?\s*(x|х)\s*(\d+[.,]\d+|\d+)\s*([мm][мm]|с[мm]|s[мm]|м|m)?\s*(?=[^\dа-яa-z]|$)/gim,
+      "null"
+    )
 
     while (index < measures.length) {
       const measuresVariations = `(${
@@ -57,11 +66,11 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
               measures
             )
 
-            return `(?=.*(${formatNumber(
+            if (multiplier > 1000 || multiplier < 0.001) return ""
+
+            return `${i === 0 ? "" : "|"}(?=.*(([^0-9а-яa-z]|^)${formatNumber(
               quantityObj.quantity * multiplier
-            )}\\s*(${measures.at(i)!.variants})${endEdgeReg}))${
-              i !== measures.length - 1 ? "|" : ""
-            }`
+            )}(,0)?\\s*(${measures.at(i)!.variants})([^0-9а-яa-z]|$)))`
           })
           .join("")
 

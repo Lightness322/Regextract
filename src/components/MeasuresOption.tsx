@@ -1,5 +1,4 @@
-import { useState } from "react"
-import { useShowSaveMeasureButton } from "../hooks/useShowSaveMeasureButton"
+import { useEffect, useState } from "react"
 import { useChangeMeasureOption } from "../hooks/useChangeMeasureOption"
 
 import { formatLabel } from "../utils/helpers"
@@ -34,11 +33,13 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
     isMeasureDeleting,
   } = useChangeMeasureOption({ setCurrentMeasures })
 
-  const { handleShowSaveMeasureButton } = useShowSaveMeasureButton({
-    measures,
-    saveButtonHeight,
-    setSaveButtonHeight,
-  })
+  useEffect(() => {
+    if (JSON.stringify(currentMeasures) === JSON.stringify(measures)) {
+      setSaveButtonHeight(0)
+    } else {
+      setSaveButtonHeight("auto")
+    }
+  }, [currentMeasures, measures, setSaveButtonHeight])
 
   function handleShowOptions() {
     if (optionTableHeight === 0) {
@@ -71,7 +72,6 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
       />
       <MeasuresOptionTable
         currentMeasures={currentMeasures}
-        handleShowSaveMeasureButton={handleShowSaveMeasureButton}
         optionTableHeight={optionTableHeight}
         setCurrentMeasures={setCurrentMeasures}
         setSaveButtonHeight={setSaveButtonHeight}

@@ -15,6 +15,7 @@ const fileTypes = ["XLSX"]
 function App() {
   const [file, setFile] = useState<File | null>(null)
   const [isFileLoading, setIsFileLoading] = useState<boolean>(false)
+  const [isFileTypeWrong, setIsFileTypeWrong] = useState<boolean>(false)
 
   const [workbook, setWorkbook] = useState<Excel.Workbook | undefined>(
     undefined
@@ -32,6 +33,7 @@ function App() {
     setSheet,
     setWorkbook,
     productsColumnLetter,
+    setIsFileTypeWrong,
   })
 
   return (
@@ -44,7 +46,7 @@ function App() {
           borderRadius: "24px",
         }}
         handleChange={(file: File) => uploadFile(file)}
-        onTypeError={(error: Error) => console.log(error)}
+        onTypeError={() => setIsFileTypeWrong(true)}
         types={fileTypes}
         disabled={file || isFileLoading}
       >
@@ -54,6 +56,7 @@ function App() {
           setFile={setFile}
           setSheet={setSheet}
           setObjUrl={setObjUrl}
+          isFileTypeWrong={isFileTypeWrong}
         />
       </FileUploader>
       <DownloadButtons objUrl={objUrl} />

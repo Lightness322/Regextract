@@ -11,10 +11,6 @@ interface IWordsOptionTableProps {
   optionTableHeight: Height
   currentWords: IWord[]
   setCurrentWords: TypeSetStateFunction<IWord[]>
-  handleShowSaveWordButton: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    i: number
-  ) => void
   setSaveButtonHeight: TypeSetStateFunction<Height>
 }
 
@@ -22,11 +18,9 @@ const WordsOptionTable: React.FC<IWordsOptionTableProps> = ({
   optionTableHeight,
   currentWords,
   setCurrentWords,
-  handleShowSaveWordButton,
   setSaveButtonHeight,
 }) => {
   const { handleChangeWords } = useChangeWordOptionValues({
-    handleShowSaveWordButton,
     setCurrentWords,
   })
 
@@ -72,7 +66,7 @@ const WordsOptionTable: React.FC<IWordsOptionTableProps> = ({
               <button
                 className="text-green-700 hover:text-green-500"
                 onClick={() => {
-                  setCurrentWords((curWords) => [{ variants: "" }, ...curWords])
+                  setCurrentWords((curWords) => [...curWords, { variants: "" }])
                   setSaveButtonHeight("auto")
                 }}
                 type="button"

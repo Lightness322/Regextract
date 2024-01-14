@@ -8,10 +8,6 @@ import { IoClose } from "react-icons/io5"
 import AnimateHeight, { Height } from "react-animate-height"
 
 interface IMeasuresOptionTableProps {
-  handleShowSaveMeasureButton: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    i: number
-  ) => void
   setCurrentMeasures: TypeSetStateFunction<IMeasure[]>
   optionTableHeight: Height
   currentMeasures: IMeasure[]
@@ -19,7 +15,6 @@ interface IMeasuresOptionTableProps {
 }
 
 const MeasuresOptionTable: React.FC<IMeasuresOptionTableProps> = ({
-  handleShowSaveMeasureButton,
   setCurrentMeasures,
   optionTableHeight,
   currentMeasures,
@@ -27,7 +22,6 @@ const MeasuresOptionTable: React.FC<IMeasuresOptionTableProps> = ({
 }) => {
   const { handleChangeMeasures, handleChangeCoefficient } =
     useChangeMeasureOptionValues({
-      handleShowSaveMeasureButton,
       setCurrentMeasures,
     })
 

@@ -37,6 +37,10 @@ export function formatNumber(number: number): string {
     : preciseNumString.replace(",", "[,.]")
 }
 
+export function isValidNumber(stringNumber: string) {
+  return stringNumber.at(0) === "0" ? false : true
+}
+
 export function getDefaultValues(measuresArray: object[]) {
   const defaultValuesObject: { [char: string]: string } = {}
 

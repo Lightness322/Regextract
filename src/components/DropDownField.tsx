@@ -9,6 +9,7 @@ interface IDropDownFieldProps {
   setFile: (file: File | null) => void
   setObjUrl: (url: string) => void
   setSheet: (sheet: Excel.Worksheet | undefined) => void
+  isFileTypeWrong: boolean
 }
 
 const DropDownField: React.FC<IDropDownFieldProps> = ({
@@ -17,6 +18,7 @@ const DropDownField: React.FC<IDropDownFieldProps> = ({
   setFile,
   setObjUrl,
   setSheet,
+  isFileTypeWrong,
 }) => {
   return (
     <div
@@ -25,7 +27,14 @@ const DropDownField: React.FC<IDropDownFieldProps> = ({
       }`}
     >
       {!file && !isFileLoading && (
-        <div className="font-medium">Загрузите файл в формате XLSX</div>
+        <div className="font-medium relative">
+          <span>Загрузите файл в формате XLSX</span>
+          {isFileTypeWrong && (
+            <span className="absolute bottom-[-40px] left-0 w-full text-center text-red-700 text-lg">
+              Неверный тип файла
+            </span>
+          )}
+        </div>
       )}
       {isFileLoading && (
         <span className="text-primary-color">

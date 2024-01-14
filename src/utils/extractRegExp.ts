@@ -57,7 +57,7 @@ export function extractRegExp({
 
   for (let i = 0; i < patternColumn.length; i++) {
     const strReg = regExpsArray.reduce((acc, elem) => {
-      return `${elem.at(i) ? `(?=.*(${elem.at(i)}))` : ""}` + acc
+      return `${elem.at(i) ? `(${elem.at(i)})` : ""}` + acc
     }, "")
     completeRegExpsArray.push(strReg)
   }

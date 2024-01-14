@@ -1,6 +1,7 @@
 import Excel from "exceljs"
 
 import { columns } from "../data/columns"
+import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 
 interface IUseUploadFileParams {
   setFile: (file: File) => void
@@ -9,6 +10,7 @@ interface IUseUploadFileParams {
   setSheet: (sheet: Excel.Worksheet) => void
   setPatternColumn: (column: string[]) => void
   productsColumnLetter: string
+  setIsFileTypeWrong: TypeSetStateFunction<boolean>
 }
 
 export function useUploadFile({
@@ -18,11 +20,14 @@ export function useUploadFile({
   setSheet,
   setPatternColumn,
   productsColumnLetter,
+  setIsFileTypeWrong,
 }: IUseUploadFileParams) {
   const uploadFile = async function (file: File) {
     setIsFileLoading(true)
 
     setFile(file)
+
+    setIsFileTypeWrong(false)
 
     const reader = new FileReader()
 

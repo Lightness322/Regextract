@@ -1,6 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useChangeWordOption } from "../hooks/useChangeWordOption"
-import { useShowSaveWordButton } from "../hooks/useShowSaveWordButton"
 
 import { formatLabel } from "../utils/helpers"
 import { FieldValues, UseFormRegister } from "react-hook-form"
@@ -34,11 +33,13 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
     isWordDeleting,
   } = useChangeWordOption({ setCurrentWords })
 
-  const { handleShowSaveWordButton } = useShowSaveWordButton({
-    saveButtonHeight,
-    setSaveButtonHeight,
-    words,
-  })
+  useEffect(() => {
+    if (JSON.stringify(currentWords) === JSON.stringify(words)) {
+      setSaveButtonHeight(0)
+    } else {
+      setSaveButtonHeight("auto")
+    }
+  }, [currentWords, setSaveButtonHeight, words])
 
   function handleShowOptions() {
     if (optionTableHeight === 0) {
@@ -53,10 +54,10 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
 
   words = [
     ...words.sort((a, b) => {
-      if (a.variants > b.variants) {
+      if (a.variants.toLowerCase() > b.variants.toLowerCase()) {
         return 1
       }
-      if (a.variants < b.variants) {
+      if (a.variants.toLowerCase() < b.variants.toLowerCase()) {
         return -1
       }
       return 0
@@ -82,7 +83,6 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
       <WordsOptionTable
         currentWords={currentWords}
         setCurrentWords={setCurrentWords}
-        handleShowSaveWordButton={handleShowSaveWordButton}
         optionTableHeight={optionTableHeight}
         setSaveButtonHeight={setSaveButtonHeight}
       />

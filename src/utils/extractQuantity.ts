@@ -6,10 +6,15 @@ export function extractQuantity(patternArray: string[]) {
     let quantity: number = 0
     let possibleMeasure: string = ""
     let matchResultArray: string[] = []
-    const quantitiesArray: number[] = []
+    let quantitiesArray: number[] = []
 
-    const reg =
-      /(\d+\s*(шт|бр|tabs|caps|капс|табл|доз)([^a-zа-я0-9]|$))|(([^a-zа-я0-9]|^)(x|х|№)\s*\d+)/gim
+    const startEdgeReg = "((?<=[^0-9а-яa-z])|(?<=^))"
+    const endEdgeReg = "(?=[^0-9а-яa-z]|$)"
+
+    const reg = new RegExp(
+      `(${startEdgeReg}\\d+\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)${endEdgeReg})|(${startEdgeReg}(x|х|№)\\s*\\d+${endEdgeReg})`,
+      "gim"
+    )
 
     if (patternString.match(reg) !== null) {
       matchResultArray = patternString.match(reg)!
@@ -32,7 +37,12 @@ export function extractQuantity(patternArray: string[]) {
         !possibleMeasure ||
         (possibleMeasure && !possibleMeasures.includes(possibleMeasure))
       ) {
-        quantity = parseInt(matchResult.match(/\d+/)!.at(0)!)
+        if (
+          matchResult.match(/\d+/) &&
+          matchResult.match(/\d+/)!.at(0)!.at(0) !== "0"
+        ) {
+          quantity = parseInt(matchResult.match(/\d+/)!.at(0)!)
+        }
       }
 
       if (quantity !== 0) quantitiesArray.push(quantity)
@@ -40,9 +50,15 @@ export function extractQuantity(patternArray: string[]) {
 
     if (quantitiesArray.length === 0) return ""
 
+    if (quantitiesArray.length === 1 && quantitiesArray.at(0) === 1) {
+      return `(?=.*((1\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*1([^0-9а-яa-z]|$)))|^(?!.*(?=.*((\\d+\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*\\d+([^0-9а-яa-z]|$)))).*$))`
+    }
+
+    quantitiesArray = quantitiesArray.filter((quantity) => quantity !== 1)
+
     const resultReg: string = quantitiesArray
       .map((quantity) => {
-        return `(?=.*((${quantity}\\s*(шт|бр|tabs|caps|капс|табл|доз))|((x|х|№)\\s*${quantity})))`
+        return `(?=.*((${quantity}\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*${quantity}([^0-9а-яa-z]|$))))`
       })
       .join("")
 

@@ -4,6 +4,9 @@ export function extractColors(patternArray: string[], words: IWord[]) {
   const regExpColorColumn = patternArray.map((patternString) => {
     const matchResultArray: string[] = []
 
+    const startEdgeReg = "((?<=[^0-9а-яa-z])|(?<=^))"
+    const endEdgeReg = "(?=[^0-9а-яa-z]|$)"
+
     let indexOfColor: number = 0
 
     while (indexOfColor < words.length) {
@@ -11,7 +14,10 @@ export function extractColors(patternArray: string[], words: IWord[]) {
 
       const colorsVariations = `${words.at(indexOfColor)!.variants}`
 
-      let reg = new RegExp(`${colorsVariations}`, "gi")
+      let reg = new RegExp(
+        `${startEdgeReg}(${colorsVariations})${endEdgeReg}`,
+        "gi"
+      )
 
       if (patternString.match(reg) !== null) {
         let matchResult: string = ""
@@ -31,7 +37,11 @@ export function extractColors(patternArray: string[], words: IWord[]) {
         }
 
         if (matchResult && !modifier) {
-          matchResultArray.push(`(?=.*(${words.at(indexOfColor)!.variants}))`)
+          matchResultArray.push(
+            `(?=.*(([^0-9а-яa-z]|^)${
+              words.at(indexOfColor)!.variants
+            }([^0-9а-яa-z]|$)))`
+          )
         }
 
         if (matchResult && modifier) {

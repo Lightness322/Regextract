@@ -2,23 +2,16 @@ import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 import { IMeasure } from "../types/measuresTypes"
 
 interface IUseChangeMeasureOptionValuesProps {
-  handleShowSaveMeasureButton?: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    i: number
-  ) => void
   setCurrentMeasures: TypeSetStateFunction<IMeasure[]>
 }
 
 export function useChangeMeasureOptionValues({
-  handleShowSaveMeasureButton,
   setCurrentMeasures,
 }: IUseChangeMeasureOptionValuesProps) {
   const handleChangeMeasures = function (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) {
-    handleShowSaveMeasureButton && handleShowSaveMeasureButton(e, index)
-
     setCurrentMeasures((prevState) =>
       prevState.map((measureObj, i) => {
         if (index === i) {
@@ -33,8 +26,6 @@ export function useChangeMeasureOptionValues({
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) {
-    handleShowSaveMeasureButton && handleShowSaveMeasureButton(e, index)
-
     setCurrentMeasures((prevState) =>
       prevState.map((measureObj, i) => {
         if (index === i) {
