@@ -55,7 +55,7 @@ export function extractQuantity(patternArray: string[]) {
     if (quantitiesArray.length === 0) return ""
 
     if (quantitiesArray.length === 1 && quantitiesArray.at(0) === 1) {
-      return `(?=.*((1\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*1([^0-9а-яa-z]|$)))|^(?!.*(?=.*((\\d+\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*\\d+([^0-9а-яa-z]|$)))).*$))`
+      return `(?=.*((([^0-9а-яa-z]|^)1\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*1([^0-9а-яa-z]|$)))|^(?!.*(?=.*((\\d+\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*\\d+([^0-9а-яa-z]|$)))).*$))`
     }
 
     quantitiesArray = quantitiesArray.filter((quantity) => quantity !== 1)
