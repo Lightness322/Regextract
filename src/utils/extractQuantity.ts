@@ -24,7 +24,8 @@ export function extractQuantity(patternArray: string[]) {
     matchResultArray.forEach((matchResult) => {
       if (isNaN(+matchResult)) {
         checkMeasureString = patternString.slice(
-          patternString.indexOf(matchResult) + matchResult.length
+          patternString.indexOf(matchResult) + matchResult.length,
+          patternString.indexOf(matchResult) + matchResult.length + 4
         )
 
         const checkMeasureReg = /[а-яa-z]+/im
