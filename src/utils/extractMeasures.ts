@@ -68,7 +68,7 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
 
             //if (multiplier > 1000 || multiplier < 0.001) return ""
 
-            return `${i === 0 ? "" : "|"}(?=.*(([^0-9а-яa-z]|^)${formatNumber(
+            return `${i === 0 ? "" : "|"}(?=.*(([^0-9а-яa-z.,]|^)${formatNumber(
               quantityObj.quantity * multiplier
             )}(,0)?\\s*(${measures.at(i)!.variants})([^0-9а-яa-z]|$)))`
           })
