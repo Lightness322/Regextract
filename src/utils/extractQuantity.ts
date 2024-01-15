@@ -18,21 +18,22 @@ export function extractQuantity(patternArray: string[]) {
 
     if (patternString.match(reg) !== null) {
       matchResultArray = patternString.match(reg)!
-      console.log(matchResultArray)
     }
 
     matchResultArray.forEach((matchResult) => {
       if (isNaN(+matchResult)) {
+        const indexAfterMatchResult =
+          patternString.indexOf(matchResult) + matchResult.length
+
         checkMeasureString = patternString.slice(
-          patternString.indexOf(matchResult) + matchResult.length,
-          patternString.indexOf(matchResult) + matchResult.length + 4
+          indexAfterMatchResult,
+          indexAfterMatchResult + 3
         )
 
         const checkMeasureReg = /[а-яa-z]+/im
 
         if (checkMeasureString.match(checkMeasureReg) !== null) {
           possibleMeasure = checkMeasureString.match(checkMeasureReg)!.at(0)!
-          console.log(possibleMeasure)
         }
       }
 
@@ -50,8 +51,6 @@ export function extractQuantity(patternArray: string[]) {
 
       if (quantity !== 0) quantitiesArray.push(quantity)
     })
-
-    console.log(quantitiesArray)
 
     if (quantitiesArray.length === 0) return ""
 

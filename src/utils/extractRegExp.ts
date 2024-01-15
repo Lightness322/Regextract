@@ -53,7 +53,8 @@ export function extractRegExp({
 
   formData.quantities && regExpsArray.push(extractQuantity(patternColumn))
 
-  formData.sizes && regExpsArray.push(extractSize(patternColumn))
+  formData.sizes &&
+    regExpsArray.push(extractSize(patternColumn, formData.isSwapSizes))
 
   for (let i = 0; i < patternColumn.length; i++) {
     const strReg = regExpsArray.reduce((acc, elem) => {

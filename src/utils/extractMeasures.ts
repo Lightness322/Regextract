@@ -58,6 +58,8 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
 
     const resultReg = quantitiesArray
       .map((quantityObj) => {
+        let startIndex = 0
+
         const resultReg = measures
           .map((_, i) => {
             const multiplier = getMultiplier(
@@ -66,9 +68,14 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
               measures
             )
 
-            //if (multiplier > 1000 || multiplier < 0.001) return ""
+            if (multiplier > 1000 || multiplier < 0.001) {
+              startIndex++
+              return ""
+            }
 
-            return `${i === 0 ? "" : "|"}(?=.*(([^0-9а-яa-z.,]|^)${formatNumber(
+            return `${
+              i === startIndex ? "" : "|"
+            }(?=.*(([^0-9а-яa-z.,]|^)${formatNumber(
               quantityObj.quantity * multiplier
             )}(,0)?\\s*(${measures.at(i)!.variants})([^0-9а-яa-z]|$)))`
           })

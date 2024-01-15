@@ -1,6 +1,6 @@
 import { formatNumber } from "./helpers"
 
-export function extractSize(patternArray: string[]) {
+export function extractSize(patternArray: string[], isSwapSizes: boolean) {
   const regExpQuantityColumn = patternArray.map((patternString) => {
     let matchResult: string = ""
     let firstNumber: number = 0
@@ -40,33 +40,47 @@ export function extractSize(patternArray: string[]) {
       }
     }
 
-    const resultReg = matchResult
-      ? `(?=.*((${formatNumber(
+    if (!matchResult) return ""
+
+    const resultReg = isSwapSizes
+      ? `(?=.*((([^,.]|^)${formatNumber(
           firstNumber * 10
         )}${measuresReg}(x|х)\\s*${formatNumber(
           secondNumber * 10
-        )}${measuresReg})|(${formatNumber(
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
           secondNumber * 10
         )}${measuresReg}(x|х)\\s*${formatNumber(
           firstNumber * 10
-        )}${measuresReg})|(${formatNumber(
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
           firstNumber
         )}${measuresReg}(x|х)\\s*${formatNumber(
           secondNumber
-        )}${measuresReg})|(${formatNumber(
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
           secondNumber
         )}${measuresReg}(x|х)\\s*${formatNumber(
           firstNumber
-        )}${measuresReg})|(${formatNumber(
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
           firstNumber / 10
         )}${measuresReg}(x|х)\\s*${formatNumber(
           secondNumber / 10
-        )}${measuresReg})|(${formatNumber(
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
           secondNumber / 10
         )}${measuresReg}(x|х)\\s*${formatNumber(
           firstNumber / 10
         )}${measuresReg})))`
-      : ""
+      : `(?=.*((([^,.]|^)${formatNumber(
+          firstNumber * 10
+        )}${measuresReg}(x|х)\\s*${formatNumber(
+          secondNumber * 10
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
+          firstNumber
+        )}${measuresReg}(x|х)\\s*${formatNumber(
+          secondNumber
+        )}${measuresReg})|(([^,.]|^)${formatNumber(
+          firstNumber / 10
+        )}${measuresReg}(x|х)\\s*${formatNumber(
+          secondNumber / 10
+        )}${measuresReg})))`
 
     return resultReg
   })

@@ -39,7 +39,7 @@ const Button: React.FC<IButtonProps> = ({
 }) => {
   return (
     <button
-      className={`${sizes[size]} rounded-lg text-white font-semibold ${
+      className={`${sizes[size]} min-w-14 rounded-lg text-white font-semibold ${
         disabled
           ? "bg-gray-500"
           : `${colors[color]} hover:bg-white hover:outline`

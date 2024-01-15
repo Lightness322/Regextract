@@ -2,6 +2,7 @@ import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IMeasureData } from "../types/measuresTypes"
 
 import { CiSquarePlus } from "react-icons/ci"
+import SwapSizesButton from "./UI/SwapSizesButton"
 import MeasuresOption from "./MeasuresOption"
 import CheckBox from "./CheckBox"
 import Tip from "./UI/Tip"
@@ -45,11 +46,14 @@ const ExtractionMeasureField: React.FC<IExtractionMeasureFieldProps> = ({
             formValue="quantities"
             register={register}
           ></CheckBox>
-          <CheckBox
-            label="Извлечь размер"
-            formValue="sizes"
-            register={register}
-          ></CheckBox>
+          <div className="relative">
+            <CheckBox
+              label="Извлечь размер SxS"
+              formValue="sizes"
+              register={register}
+            ></CheckBox>
+            <SwapSizesButton register={register} />
+          </div>
         </div>
       </div>
     </div>
