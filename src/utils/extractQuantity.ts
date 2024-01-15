@@ -18,6 +18,7 @@ export function extractQuantity(patternArray: string[]) {
 
     if (patternString.match(reg) !== null) {
       matchResultArray = patternString.match(reg)!
+      console.log(matchResultArray)
     }
 
     matchResultArray.forEach((matchResult) => {
@@ -30,6 +31,7 @@ export function extractQuantity(patternArray: string[]) {
 
         if (checkMeasureString.match(checkMeasureReg) !== null) {
           possibleMeasure = checkMeasureString.match(checkMeasureReg)!.at(0)!
+          console.log(possibleMeasure)
         }
       }
 
@@ -47,6 +49,8 @@ export function extractQuantity(patternArray: string[]) {
 
       if (quantity !== 0) quantitiesArray.push(quantity)
     })
+
+    console.log(quantitiesArray)
 
     if (quantitiesArray.length === 0) return ""
 
