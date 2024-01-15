@@ -19,7 +19,6 @@
 
 - База данных: Supabase
 
-- Библиотека для работы с Excel файлами: exceljs
 
 _[Посмотреть сайт на netlify](https://regextract.netlify.app/)_
 
