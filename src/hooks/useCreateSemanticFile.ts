@@ -8,13 +8,15 @@ import { columns } from "../data/columns"
 import { FieldValues } from "react-hook-form"
 import { IMeasureData } from "../types/measuresTypes"
 import { IWordData } from "../types/wordsTypes"
+import { IQuantityData } from "../types/quantitiesTypes"
 
 interface IUseCreateSemanticFileParams {
   measuresData: IMeasureData[] | undefined
   wordsData: IWordData[] | undefined
-  patternColumn: string[]
+  quantitiesData: IQuantityData[] | undefined
   workbook: Excel.Workbook | undefined
   sheet: Excel.Worksheet | undefined
+  productsColumnLetter: string
   regExpColumnLetter: string
   setObjUrl: (url: string) => void
 }
@@ -22,19 +24,31 @@ interface IUseCreateSemanticFileParams {
 export function useCreateSemanticFile({
   measuresData,
   wordsData,
-  patternColumn,
+  quantitiesData,
   workbook,
   sheet,
+  productsColumnLetter,
   regExpColumnLetter,
   setObjUrl,
 }: IUseCreateSemanticFileParams) {
   const [isRegExpCreating, setIsRegExpCreating] = useState<boolean>(false)
 
   const createSemanticFile = async function (formData: FieldValues) {
+    const productsColumn = sheet!.getColumn(
+      columns.indexOf(productsColumnLetter) + 1
+    ).values
+
+    const patternColumn: string[] = []
+
+    for (let i = 1; i < productsColumn.length; i++) {
+      patternColumn.push(String(productsColumn.at(i)))
+    }
+
     const completeRegExpsArray = extractRegExp({
       formData,
       measuresData,
       wordsData,
+      quantitiesData,
       patternColumn,
     })
 

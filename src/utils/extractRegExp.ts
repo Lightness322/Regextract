@@ -8,12 +8,14 @@ import { formatLabel } from "./helpers"
 import { FieldValues } from "react-hook-form"
 import { IMeasureData } from "../types/measuresTypes"
 import { IWordData } from "../types/wordsTypes"
+import { IQuantityData } from "../types/quantitiesTypes"
 
 interface IExtractRegExpArgs {
   patternColumn: string[]
   formData: FieldValues
   measuresData: IMeasureData[] | undefined
   wordsData: IWordData[] | undefined
+  quantitiesData: IQuantityData[] | undefined
 }
 
 export function extractRegExp({
@@ -21,6 +23,7 @@ export function extractRegExp({
   formData,
   measuresData,
   wordsData,
+  quantitiesData,
 }: IExtractRegExpArgs) {
   if (formData.headers) {
     patternColumn = patternColumn.slice(1)
@@ -51,7 +54,10 @@ export function extractRegExp({
     }
   })
 
-  formData.quantities && regExpsArray.push(extractQuantity(patternColumn))
+  formData.quantities &&
+    regExpsArray.push(
+      extractQuantity(patternColumn, quantitiesData!.at(0)!.params)
+    )
 
   formData.sizes &&
     regExpsArray.push(extractSize(patternColumn, formData.isSwapSizes))

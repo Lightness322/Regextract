@@ -2,6 +2,8 @@ import { useState } from "react"
 
 import { FieldValues, UseFormRegister } from "react-hook-form"
 
+import { extractSizesTip } from "../../data/tips"
+
 import { RiSwapBoxLine } from "react-icons/ri"
 
 interface ISwapSizesButtonProps {
@@ -17,7 +19,7 @@ const SwapSizesButton: React.FC<ISwapSizesButtonProps> = ({ register }) => {
         className="bg-primary-color absolute left-[185px] top-[2px] h-[25px] w-[25px] z-10 opacity-0 cursor-pointer"
         onClick={() => setIsSwapSizes((isSwap) => !isSwap)}
         type="checkbox"
-        title="Если вкл, то регулярка создается также для обратного размера"
+        title={extractSizesTip}
         {...register("isSwapSizes")}
       />
       <button

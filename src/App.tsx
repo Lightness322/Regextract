@@ -22,17 +22,13 @@ function App() {
   )
   const [sheet, setSheet] = useState<Excel.Worksheet | undefined>(undefined)
 
-  const [patternColumn, setPatternColumn] = useState<string[]>([])
-  const [productsColumnLetter, setProductsColumnLetter] = useState<string>("A")
   const [objUrl, setObjUrl] = useState("")
 
   const { uploadFile } = useUploadFile({
     setFile,
     setIsFileLoading,
-    setPatternColumn,
     setSheet,
     setWorkbook,
-    productsColumnLetter,
     setIsFileTypeWrong,
   })
 
@@ -63,9 +59,6 @@ function App() {
       <ExtractionOptions
         workbook={workbook}
         sheet={sheet}
-        patternColumn={patternColumn}
-        productsColumnLetter={productsColumnLetter}
-        setProductsColumnLetter={setProductsColumnLetter}
         setObjUrl={setObjUrl}
       />
     </Container>

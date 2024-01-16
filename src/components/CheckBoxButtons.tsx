@@ -1,5 +1,7 @@
 import { Height } from "react-animate-height"
 
+import { extractColorsTip } from "../data/tips"
+
 import { IoSettingsOutline } from "react-icons/io5"
 import CheckBoxDeleteButton from "./CheckBoxDeleteButton"
 import Tip from "./UI/Tip"
@@ -31,9 +33,7 @@ const CheckBoxButtons: React.FC<ICheckBoxButtonsProps> = ({
       >
         <IoSettingsOutline size="24" />
       </button>
-      {label === "Извлечь цвета" && (
-        <Tip tip="Для каждого цвета также будут искаться оттенки: светло|т[её]мно|light|dark, т.е. такие вариации можно не указывать." />
-      )}
+      {label === "Извлечь цвета" && <Tip tip={extractColorsTip} />}
       <CheckBoxDeleteButton
         label={label}
         tableHeight={tableHeight}

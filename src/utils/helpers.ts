@@ -1,4 +1,5 @@
 import { IMeasure } from "../types/measuresTypes"
+import { IWord } from "../types/wordsTypes"
 
 export function getMultiplier(
   quantityIndex: number,
@@ -70,4 +71,20 @@ export function includesEmptyFields(array: Array<object>) {
   array.forEach((obj) => (values = [...values, ...Object.values(obj)]))
 
   return values.includes("")
+}
+
+export function checkDuplicates(currentArray: IWord[], i: number) {
+  const fl = currentArray.map((curWordObj) => curWordObj.variants)
+
+  return fl.filter((_, index) => index !== i).includes(fl.at(i)!)
+}
+
+export function deleteWordDuplicates(currentWords: IWord[]) {
+  const variants = currentWords.map((wordObj) => wordObj.variants)
+
+  const currentWordsUnique = currentWords.filter(
+    (wordObj, i) => i === variants.indexOf(wordObj.variants)
+  )
+
+  return currentWordsUnique
 }

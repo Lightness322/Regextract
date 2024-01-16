@@ -1,6 +1,7 @@
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IMeasureData } from "../types/measuresTypes"
 import { IWordData } from "../types/wordsTypes"
+import { IQuantityData } from "../types/quantitiesTypes"
 
 import ExtractionMeasureField from "./ExtractionMeasureField"
 import ExtractionWordField from "./ExtractionWordField"
@@ -9,6 +10,7 @@ interface IExtractionTypesFieldsProps {
   register: UseFormRegister<FieldValues>
   measuresData: IMeasureData[] | undefined
   wordsData: IWordData[] | undefined
+  quantitiesData: IQuantityData[] | undefined
   setIsMeasuresModalShow: (isShow: boolean) => void
   setIsWordsModalShow: (isShow: boolean) => void
 }
@@ -17,6 +19,7 @@ const ExtractionTypesFields: React.FC<IExtractionTypesFieldsProps> = ({
   register,
   measuresData,
   wordsData,
+  quantitiesData,
   setIsMeasuresModalShow,
   setIsWordsModalShow,
 }) => {
@@ -25,6 +28,7 @@ const ExtractionTypesFields: React.FC<IExtractionTypesFieldsProps> = ({
       <ExtractionMeasureField
         register={register}
         measuresData={measuresData}
+        quantitiesData={quantitiesData}
         setIsMeasuresModalShow={setIsMeasuresModalShow}
       />
       <ExtractionWordField

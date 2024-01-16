@@ -2,6 +2,7 @@ import { useChangeWordOptionValues } from "../hooks/useChangeWordOptionValues"
 
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 import { IWord } from "../types/wordsTypes"
+import { checkDuplicates } from "../utils/helpers"
 
 import { CiSquarePlus } from "react-icons/ci"
 import { IoClose } from "react-icons/io5"
@@ -37,7 +38,9 @@ const WordsOptionTable: React.FC<IWordsOptionTableProps> = ({
             <tr key={i}>
               <td className="max-[620px]:w-full">
                 <input
-                  className="p-0 border border-solid border-[#ca8544] rounded-md text-center w-[500px] max-[620px]:w-full"
+                  className={`p-0 border border-solid border-[#ca8544] rounded-md text-center w-[500px] max-[620px]:w-full ${
+                    checkDuplicates(currentWords, i) ? "border-red-600" : ""
+                  }`}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     handleChangeWords(e, i)
                   }}

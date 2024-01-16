@@ -15,7 +15,7 @@ export function useChangeMeasureOptionValues({
     setCurrentMeasures((prevState) =>
       prevState.map((measureObj, i) => {
         if (index === i) {
-          return { ...measureObj, variants: e.target.value }
+          return { ...measureObj, variants: e.target.value.toLowerCase() }
         }
         return { ...measureObj }
       })

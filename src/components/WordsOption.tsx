@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useChangeWordOption } from "../hooks/useChangeWordOption"
 
-import { formatLabel } from "../utils/helpers"
+import { deleteWordDuplicates, formatLabel } from "../utils/helpers"
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IWord } from "../types/wordsTypes"
 import { Height } from "react-animate-height"
@@ -77,7 +77,9 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
       ></CheckBox>
       <SaveButton
         buttonHeight={saveButtonHeight}
-        updateFn={() => updateWords({ label, params: currentWords })}
+        updateFn={() =>
+          updateWords({ label, params: deleteWordDuplicates(currentWords) })
+        }
         isUpdating={isWordsUpdating}
       />
       <WordsOptionTable

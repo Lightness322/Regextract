@@ -7,8 +7,10 @@ import {
 } from "../services/apiWords"
 
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
-import { Height } from "react-animate-height"
 import { IWord } from "../types/wordsTypes"
+import { Height } from "react-animate-height"
+
+import { deleteWordDuplicates } from "../utils/helpers"
 
 import toast from "react-hot-toast"
 
@@ -27,18 +29,18 @@ export function useChangeWordOption({
     mutationFn: handleUpdateWords,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["words"] })
-      setSaveButtonHeight(0)
       setCurrentWords((curWords) =>
-        curWords.sort((a, b) => {
-          if (a.variants > b.variants) {
+        deleteWordDuplicates(curWords).sort((a, b) => {
+          if (a.variants.toLowerCase() > b.variants.toLowerCase()) {
             return 1
           }
-          if (a.variants < b.variants) {
+          if (a.variants.toLowerCase() < b.variants.toLowerCase()) {
             return -1
           }
           return 0
         })
       )
+      setSaveButtonHeight(0)
       toast.success("Сохранено")
     },
     onError: (error) => {

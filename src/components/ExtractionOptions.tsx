@@ -5,6 +5,8 @@ import { useGetWords } from "../hooks/useGetWords"
 import { FieldValues, useForm } from "react-hook-form"
 
 import { sortExtractionOption } from "../utils/sortExtractionOption"
+import { useGetQuantities } from "../hooks/useGetQuantities"
+
 import { Height } from "react-animate-height"
 import Excel from "exceljs"
 
@@ -20,22 +22,18 @@ import Modal from "./UI/Modal"
 interface IExtractionOptionsProps {
   sheet: Excel.Worksheet | undefined
   workbook: Excel.Workbook | undefined
-  patternColumn: string[]
   setObjUrl: (url: string) => void
-  productsColumnLetter: string
-  setProductsColumnLetter: (letter: string) => void
 }
 
 const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
-  patternColumn,
   sheet,
   workbook,
   setObjUrl,
-  productsColumnLetter,
-  setProductsColumnLetter,
 }) => {
   const [createRegExpButtonHeight, setCreateRegExpButtonHeight] =
     useState<Height>(0)
+
+  const [productsColumnLetter, setProductsColumnLetter] = useState<string>("A")
   const [regExpColumnLetter, setRegExpColumnLetter] = useState<string>("E")
 
   const [isMeasuresModalShow, setIsMeasuresModalShow] = useState<boolean>(false)
@@ -45,15 +43,19 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
 
   const { wordsData, isWordsLoading, wordsError } = useGetWords()
 
+  const { quantitiesData, isQuantitiesLoading, quantitiesError } =
+    useGetQuantities()
+
   const { handleSubmit, register } = useForm()
 
   const { createSemanticFile, isRegExpCreating, setIsRegExpCreating } =
     useCreateSemanticFile({
       measuresData,
       wordsData,
+      quantitiesData,
       workbook,
       sheet,
-      patternColumn,
+      productsColumnLetter,
       regExpColumnLetter,
       setObjUrl,
     })
@@ -72,7 +74,7 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
     createSemanticFile(formData)
   }
 
-  if (isMeasuresLoading || isWordsLoading)
+  if (isMeasuresLoading || isWordsLoading || isQuantitiesLoading)
     return (
       <div className="h-full w-full flex justify-center items-center">
         <div className="-translate-y-20 text-primary-color">
@@ -81,7 +83,7 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
       </div>
     )
 
-  if (wordsError || measuresError)
+  if (wordsError || measuresError || quantitiesError)
     return <ErrorMessage error={wordsError || measuresError} />
 
   sortExtractionOption(measuresData!)
@@ -124,6 +126,7 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
           register={register}
           measuresData={measuresData}
           wordsData={wordsData}
+          quantitiesData={quantitiesData}
           setIsMeasuresModalShow={setIsMeasuresModalShow}
           setIsWordsModalShow={setIsWordsModalShow}
         />

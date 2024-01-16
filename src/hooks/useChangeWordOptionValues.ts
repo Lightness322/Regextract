@@ -15,7 +15,7 @@ export function useChangeWordOptionValues({
     setCurrentWords((prevState) =>
       prevState.map((wordObj, i) => {
         if (index === i) {
-          return { ...wordObj, variants: e.target.value }
+          return { ...wordObj, variants: e.target.value.toLowerCase() }
         }
         return { ...wordObj }
       })
