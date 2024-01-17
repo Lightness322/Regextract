@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react"
 import { useCreateSemanticFile } from "../hooks/useCreateSemanticFile"
-import { useGetMeasures } from "../hooks/useGetMeasures"
-import { useGetWords } from "../hooks/useGetWords"
-import { FieldValues, useForm } from "react-hook-form"
+import { useGetOptionsData } from "../hooks/useGetOptionsData"
 
 import { sortExtractionOption } from "../utils/sortExtractionOption"
-import { useGetQuantities } from "../hooks/useGetQuantities"
 
+import { FieldValues, useForm } from "react-hook-form"
 import { Height } from "react-animate-height"
+
 import Excel from "exceljs"
 
 import AddMeasureExtractionForm from "./AddMeasureExtractionForm"
@@ -39,12 +38,11 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
   const [isMeasuresModalShow, setIsMeasuresModalShow] = useState<boolean>(false)
   const [isWordsModalShow, setIsWordsModalShow] = useState<boolean>(false)
 
-  const { measuresData, isMeasuresLoading, measuresError } = useGetMeasures()
-
-  const { wordsData, isWordsLoading, wordsError } = useGetWords()
-
-  const { quantitiesData, isQuantitiesLoading, quantitiesError } =
-    useGetQuantities()
+  const {
+    optionsData: { measuresData, quantitiesData, wordsData },
+    isOptionsDataLoading,
+    optionsDataGetError,
+  } = useGetOptionsData()
 
   const { handleSubmit, register } = useForm()
 
@@ -74,7 +72,7 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
     createSemanticFile(formData)
   }
 
-  if (isMeasuresLoading || isWordsLoading || isQuantitiesLoading)
+  if (isOptionsDataLoading)
     return (
       <div className="h-full w-full flex justify-center items-center">
         <div className="-translate-y-20 text-primary-color">
@@ -83,8 +81,7 @@ const ExtractionOptions: React.FC<IExtractionOptionsProps> = ({
       </div>
     )
 
-  if (wordsError || measuresError || quantitiesError)
-    return <ErrorMessage error={wordsError || measuresError} />
+  if (optionsDataGetError) return <ErrorMessage error={optionsDataGetError} />
 
   sortExtractionOption(measuresData!)
 
