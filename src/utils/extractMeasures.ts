@@ -9,7 +9,7 @@ interface IQuantityObj {
 
 export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
   const regExpMeasureColumn = patternArray.map((patternString) => {
-    const quantitiesArray: IQuantityObj[] = []
+    const quantitiesObjArray: IQuantityObj[] = []
 
     const startEdgeReg = "((?<=[^0-9а-яa-z])|(?<=^))"
     const endEdgeReg = "(?=[^0-9а-яa-z]|$)"
@@ -47,16 +47,22 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
             ? parseFloat(matchResult.replace(",", "."))
             : parseFloat(matchResult.slice(1).replace(",", "."))
 
-          quantitiesArray.push({
-            quantity,
-            quantityIndex: index,
-          })
+          const currentQuantities = quantitiesObjArray.map(
+            (quantityObj) => quantityObj.quantity
+          )
+
+          if (!currentQuantities.includes(quantity)) {
+            quantitiesObjArray.push({
+              quantity,
+              quantityIndex: index,
+            })
+          }
         })
       }
       index++
     }
 
-    const resultReg = quantitiesArray
+    const resultReg = quantitiesObjArray
       .map((quantityObj) => {
         let startIndex = 0
 

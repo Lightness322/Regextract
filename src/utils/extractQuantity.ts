@@ -50,7 +50,8 @@ export function extractQuantity(patternArray: string[], quantities: IQuantity) {
         }
       }
 
-      if (quantity !== 0) quantitiesArray.push(quantity)
+      if (quantity !== 0 && !quantitiesArray.includes(quantity))
+        quantitiesArray.push(quantity)
     })
 
     if (quantitiesArray.length === 0) return ""

@@ -15,7 +15,7 @@ const SaveButton: React.FC<ISaveButtonProps> = ({
 }) => {
   return (
     <AnimateHeight height={buttonHeight} duration={500}>
-      <div className="py-3">
+      <div className="py-3 pl-1">
         <Button type="button" size="sm" color="green" onClick={updateFn}>
           {!isUpdating ? (
             <span>Сохранить</span>
