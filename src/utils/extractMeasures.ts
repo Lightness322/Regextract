@@ -75,13 +75,13 @@ export function extractMeasures(patternArray: string[], measures: IMeasure[]) {
 
             return `${
               i === startIndex ? "" : "|"
-            }(?=.*(((([^0-9]|^)[,.])|([^0-9а-яa-z.,]|^))${formatNumber(
+            }(((([^0-9]|^)[,.])|([^0-9а-яa-z.,]|^))${formatNumber(
               quantityObj.quantity * multiplier
-            )}(,0)?\\s*(${measures.at(i)!.variants})([^0-9а-яa-z]|$)))`
+            )}(,0)?\\s*(${measures.at(i)!.variants})([^0-9а-яa-z]|$))`
           })
           .join("")
 
-        return quantitiesArray.length > 1 ? `(?=.*${resultReg})` : resultReg
+        return `(?=.*(${resultReg}))`
       })
       .join("")
 
