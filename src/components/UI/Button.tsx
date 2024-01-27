@@ -25,8 +25,8 @@ const colors: IColors = {
 }
 
 const sizes: ISizes = {
-  sm: "p-[6px] text-base",
-  md: "p-3 text-lg",
+  sm: "p-[6px] text-base max-[560px]:p-[4px] max-[560px]:text-sm",
+  md: "p-3 text-lg max-[560px]:p-2 max-[560px]:text-base",
 }
 
 const Button: React.FC<IButtonProps> = ({

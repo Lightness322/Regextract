@@ -22,7 +22,7 @@ const Header: React.FC = () => {
           className="h-[50px]"
           src="https://manager.brandpolgroup.com/build/assets/bpg_h50.90099431.svg"
         />
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center max-[620px]:flex-col">
           <span>{email}</span>
           <Button type="button" size="sm" onClick={handleLogOut}>
             {isLoggingOut ? (

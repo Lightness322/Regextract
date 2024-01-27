@@ -32,7 +32,7 @@ const AuthorizationPage: React.FC = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-[#dcbc9e59]">
       <form
-        className="p-10 border-2 border-primary-color border-solid flex flex-col min-w-[600px] gap-7 rounded-3xl bg-white shadow-[10px_10px_10px_#00000044]"
+        className="p-10 border-2 border-primary-color border-solid flex flex-col max-w-[600px] gap-7 rounded-3xl bg-white shadow-[10px_10px_10px_#00000044] w-full"
         onSubmit={handleSubmit(
           loginType === "login" ? onLoginSubmit : onSignInSubmit
         )}
