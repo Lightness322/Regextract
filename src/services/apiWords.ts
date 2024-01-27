@@ -1,9 +1,13 @@
 import supabase from "./supabase"
 
 import { IWordData } from "../types/wordsTypes"
+import { IFindParams } from "../types/IFindParams"
 
-export async function getWords() {
-  const { data: words, error } = await supabase.from("words").select("*")
+export async function getWords(userId: string) {
+  const { data: words, error } = await supabase
+    .from("words")
+    .select("*")
+    .eq("userId", userId)
 
   if (error) {
     throw new Error(error.message)
@@ -12,11 +16,12 @@ export async function getWords() {
   return words
 }
 
-export async function updateWords({ label, params }: IWordData) {
+export async function updateWords({ label, params, userId }: IWordData) {
   const { data, error } = await supabase
     .from("words")
     .update({ params })
     .eq("label", label)
+    .eq("userId", userId)
     .select("*")
 
   if (error) {
@@ -26,10 +31,10 @@ export async function updateWords({ label, params }: IWordData) {
   return data
 }
 
-export async function insertWord({ label, params }: IWordData) {
+export async function insertWord({ label, params, userId }: IWordData) {
   const { data, error } = await supabase
     .from("words")
-    .insert([{ label, params }])
+    .insert([{ label, params, userId }])
     .select()
 
   if (error) {
@@ -39,8 +44,12 @@ export async function insertWord({ label, params }: IWordData) {
   return data
 }
 
-export async function deleteWord(label: string) {
-  const { error } = await supabase.from("words").delete().eq("label", label)
+export async function deleteWord({ label, userId }: IFindParams) {
+  const { error } = await supabase
+    .from("words")
+    .delete()
+    .eq("label", label)
+    .eq("userId", userId)
 
   if (error) {
     throw new Error(error.message)

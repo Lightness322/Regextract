@@ -4,6 +4,7 @@ export interface IQuantity {
 }
 
 export interface IQuantityData {
+  userId: string
   label: string
   params: IQuantity
 }

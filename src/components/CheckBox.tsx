@@ -10,8 +10,6 @@ interface ICheckBoxProps {
   register: UseFormRegister<FieldValues>
   tableHeight?: Height
   handleShowOptions?: () => void
-  deleteExtractionOption?: (label: string) => void
-  isOptionDeleting?: boolean
 }
 
 const CheckBox: React.FC<ICheckBoxProps> = ({
@@ -20,8 +18,6 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
   register,
   tableHeight,
   handleShowOptions,
-  deleteExtractionOption,
-  isOptionDeleting,
 }) => {
   return (
     <div
@@ -36,10 +32,8 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
         {handleShowOptions && (
           <CheckBoxButtons
             label={label}
-            deleteExtractionOption={deleteExtractionOption}
             handleShowOptions={handleShowOptions}
             tableHeight={tableHeight}
-            isOptionDeleting={isOptionDeleting}
           />
         )}
       </div>

@@ -1,67 +1,54 @@
-import { useState } from "react"
-import { useUploadFile } from "./hooks/useUploadFile"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
-import Excel from "exceljs"
+import { Toaster } from "react-hot-toast"
 
-import { FileUploader } from "react-drag-drop-files"
-import Container from "./components/UI/Container"
-import Header from "./components/Header"
-import ExtractionOptions from "./components/ExtractionOptions"
-import DropDownField from "./components/DropDownField"
-import DownloadButtons from "./components/DownloadButtons"
+import ProtectedRoute from "./components/ProtectedRoute"
+import MainPage from "./pages/MainPage"
+import AuthorizationPage from "./pages/AuthorizationPage"
 
-const fileTypes = ["XLSX"]
+const queryClient = new QueryClient()
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <MainPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: <AuthorizationPage />,
+  },
+])
 
 function App() {
-  const [file, setFile] = useState<File | null>(null)
-  const [isFileLoading, setIsFileLoading] = useState<boolean>(false)
-  const [isFileTypeWrong, setIsFileTypeWrong] = useState<boolean>(false)
-
-  const [workbook, setWorkbook] = useState<Excel.Workbook | undefined>(
-    undefined
-  )
-  const [sheet, setSheet] = useState<Excel.Worksheet | undefined>(undefined)
-
-  const [objUrl, setObjUrl] = useState("")
-
-  const { uploadFile } = useUploadFile({
-    setFile,
-    setIsFileLoading,
-    setSheet,
-    setWorkbook,
-    setIsFileTypeWrong,
-  })
-
   return (
-    <Container>
-      <Header />
-      <FileUploader
-        dropMessageStyle={{
-          fontSize: "0px",
-          backgroundColor: "#d4ab85",
-          borderRadius: "24px",
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster
+        position="bottom-center"
+        gutter={12}
+        toastOptions={{
+          success: {
+            duration: 2000,
+          },
+          error: {
+            duration: 4000,
+          },
+          style: {
+            maxWidth: "500px",
+            padding: "12px 18px",
+            backgroundColor: "#ca8544",
+            color: "#ffffff",
+            fontSize: "1.4rem",
+            fontWeight: "500",
+          },
         }}
-        handleChange={(file: File) => uploadFile(file)}
-        onTypeError={() => setIsFileTypeWrong(true)}
-        types={fileTypes}
-        disabled={file || isFileLoading}
-      >
-        <DropDownField
-          file={file}
-          isFileLoading={isFileLoading}
-          setFile={setFile}
-          setSheet={setSheet}
-          setObjUrl={setObjUrl}
-          isFileTypeWrong={isFileTypeWrong}
-        />
-      </FileUploader>
-      <DownloadButtons objUrl={objUrl} />
-      <ExtractionOptions
-        workbook={workbook}
-        sheet={sheet}
-        setObjUrl={setObjUrl}
       />
-    </Container>
+    </QueryClientProvider>
   )
 }
 

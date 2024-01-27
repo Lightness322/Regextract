@@ -3,6 +3,7 @@ export interface IWord {
 }
 
 export interface IWordData {
+  userId: string
   label: string
   params: IWord[]
 }

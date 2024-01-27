@@ -1,9 +1,13 @@
 import supabase from "./supabase"
 
 import { IMeasureData } from "../types/measuresTypes"
+import { IFindParams } from "../types/IFindParams"
 
-export async function getMeasures() {
-  const { data: measures, error } = await supabase.from("measures").select("*")
+export async function getMeasures(userId: string) {
+  const { data: measures, error } = await supabase
+    .from("measures")
+    .select("*")
+    .eq("userId", userId)
 
   if (error) {
     throw new Error(error.message)
@@ -12,11 +16,12 @@ export async function getMeasures() {
   return measures
 }
 
-export async function updateMeasures({ label, params }: IMeasureData) {
+export async function updateMeasures({ label, params, userId }: IMeasureData) {
   const { data, error } = await supabase
     .from("measures")
     .update({ params })
     .eq("label", label)
+    .eq("userId", userId)
     .select("*")
 
   if (error) {
@@ -26,10 +31,10 @@ export async function updateMeasures({ label, params }: IMeasureData) {
   return data
 }
 
-export async function insertMeasure({ label, params }: IMeasureData) {
+export async function insertMeasure({ label, params, userId }: IMeasureData) {
   const { data, error } = await supabase
     .from("measures")
-    .insert([{ label, params }])
+    .insert([{ label, params, userId }])
     .select()
 
   if (error) {
@@ -39,8 +44,12 @@ export async function insertMeasure({ label, params }: IMeasureData) {
   return data
 }
 
-export async function deleteMeasure(label: string) {
-  const { error } = await supabase.from("measures").delete().eq("label", label)
+export async function deleteMeasure({ label, userId }: IFindParams) {
+  const { error } = await supabase
+    .from("measures")
+    .delete()
+    .eq("label", label)
+    .eq("userId", userId)
 
   if (error) {
     throw new Error(error.message)

@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useInsertMeasureOption } from "../hooks/useInsertMeasureOption"
+import { useUserId } from "../hooks/useUserId"
 
 import { includesEmptyFields } from "../utils/helpers"
+
 import { IMeasure, IMeasureData } from "../types/measuresTypes"
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 
@@ -28,12 +30,15 @@ const AddMeasureExtractionForm: React.FC<IAddMeasureExtractionFormProps> = ({
     setIsModalShow,
   })
 
+  const { userId } = useUserId()
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     insertMeasure({
       label,
       params: currentMeasures,
+      userId,
     })
   }
 

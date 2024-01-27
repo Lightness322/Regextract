@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
 import { useChangeWordOption } from "../hooks/useChangeWordOption"
+import { useUserId } from "../hooks/useUserId"
 
 import { deleteWordDuplicates, formatLabel } from "../utils/helpers"
+import { DeleteContext } from "../context/DeleteContext"
+
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IWord } from "../types/wordsTypes"
 import { Height } from "react-animate-height"
@@ -32,6 +35,8 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
     isWordsUpdating,
     isWordDeleting,
   } = useChangeWordOption({ setCurrentWords })
+
+  const { userId } = useUserId()
 
   useEffect(() => {
     if (JSON.stringify(currentWords) === JSON.stringify(words)) {
@@ -66,19 +71,28 @@ const WordsOption: React.FC<IWordsOptionProps> = ({
 
   return (
     <div>
-      <CheckBox
-        label={`${label}`}
-        formValue={formatLabel(label)}
-        register={register}
-        tableHeight={optionTableHeight}
-        handleShowOptions={handleShowOptions}
-        deleteExtractionOption={deleteWord}
-        isOptionDeleting={isWordDeleting}
-      ></CheckBox>
+      <DeleteContext.Provider
+        value={{
+          deleteFn: deleteWord,
+          isDeleting: isWordDeleting,
+        }}
+      >
+        <CheckBox
+          label={`${label}`}
+          formValue={formatLabel(label)}
+          register={register}
+          tableHeight={optionTableHeight}
+          handleShowOptions={handleShowOptions}
+        />
+      </DeleteContext.Provider>
       <SaveButton
         buttonHeight={saveButtonHeight}
         updateFn={() =>
-          updateWords({ label, params: deleteWordDuplicates(currentWords) })
+          updateWords({
+            label,
+            params: deleteWordDuplicates(currentWords),
+            userId,
+          })
         }
         isUpdating={isWordsUpdating}
       />

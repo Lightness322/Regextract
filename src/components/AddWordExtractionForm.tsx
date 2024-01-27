@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useInsertWordOption } from "../hooks/useInsertWordOption"
+import { useUserId } from "../hooks/useUserId"
 
 import { includesEmptyFields } from "../utils/helpers"
+
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 import { IWord, IWordData } from "../types/wordsTypes"
 
@@ -28,12 +30,15 @@ const AddWordExtractionForm: React.FC<IAddWordExtractionFormProps> = ({
     setIsModalShow,
   })
 
+  const { userId } = useUserId()
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     insertWord({
       label,
       params: currentWords,
+      userId,
     })
   }
 

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
 import { useChangeMeasureOption } from "../hooks/useChangeMeasureOption"
+import { useUserId } from "../hooks/useUserId"
 
 import { formatLabel } from "../utils/helpers"
+import { DeleteContext } from "../context/DeleteContext"
+
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IMeasure } from "../types/measuresTypes"
 import { Height } from "react-animate-height"
@@ -33,6 +36,8 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
     isMeasureDeleting,
   } = useChangeMeasureOption({ setCurrentMeasures })
 
+  const { userId } = useUserId()
+
   useEffect(() => {
     if (JSON.stringify(currentMeasures) === JSON.stringify(measures)) {
       setSaveButtonHeight(0)
@@ -56,18 +61,25 @@ const MeasuresOption: React.FC<IMeasuresOptionProps> = ({
 
   return (
     <div>
-      <CheckBox
-        label={`${label}`}
-        formValue={formatLabel(label)}
-        register={register}
-        tableHeight={optionTableHeight}
-        handleShowOptions={handleShowOptions}
-        deleteExtractionOption={deleteMeasure}
-        isOptionDeleting={isMeasureDeleting}
-      />
+      <DeleteContext.Provider
+        value={{
+          deleteFn: deleteMeasure,
+          isDeleting: isMeasureDeleting,
+        }}
+      >
+        <CheckBox
+          label={`${label}`}
+          formValue={formatLabel(label)}
+          register={register}
+          tableHeight={optionTableHeight}
+          handleShowOptions={handleShowOptions}
+        />
+      </DeleteContext.Provider>
       <SaveButton
         buttonHeight={saveButtonHeight}
-        updateFn={() => updateMeasures({ label, params: currentMeasures })}
+        updateFn={() =>
+          updateMeasures({ label, params: currentMeasures, userId })
+        }
         isUpdating={isMeasureUpdating}
       />
       <MeasuresOptionTable

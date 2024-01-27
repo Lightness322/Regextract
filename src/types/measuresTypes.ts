@@ -4,6 +4,7 @@ export interface IMeasure {
 }
 
 export interface IMeasureData {
+  userId: string
   label: string
   params: IMeasure[]
 }

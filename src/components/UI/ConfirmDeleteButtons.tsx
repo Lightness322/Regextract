@@ -1,3 +1,8 @@
+import { useContext } from "react"
+import { useUserId } from "../../hooks/useUserId"
+
+import { DeleteContext } from "../../context/DeleteContext"
+
 import { TypeSetStateFunction } from "../../types/TypeSetStateFunction"
 
 import Button from "./Button"
@@ -5,17 +10,21 @@ import Loader from "./Loader"
 
 interface IConfirmDeleteButtonsProps {
   label: string
-  deleteFn?: (label: string) => void
-  isDeleting?: boolean
   setIsModalShow: TypeSetStateFunction<boolean>
 }
 
 const ConfirmDeleteButtons: React.FC<IConfirmDeleteButtonsProps> = ({
   label,
-  isDeleting,
-  deleteFn,
   setIsModalShow,
 }) => {
+  const contextValue = useContext(DeleteContext)
+
+  const { userId } = useUserId()
+
+  const deleteFn = contextValue !== null ? contextValue.deleteFn : null
+
+  const isDeleting = contextValue !== null ? contextValue.isDeleting : null
+
   return (
     <div className="h-40 w-72 bg-white flex flex-col justify-center items-center rounded-xl gap-y-5">
       <div className="font-semibold text-xl">Вы уверены?</div>
@@ -27,8 +36,8 @@ const ConfirmDeleteButtons: React.FC<IConfirmDeleteButtonsProps> = ({
         ) : (
           <Button
             type="button"
-            disabled={isDeleting}
-            onClick={() => deleteFn!(label)}
+            disabled={isDeleting!}
+            onClick={() => deleteFn!({ label, userId })}
           >
             Да
           </Button>

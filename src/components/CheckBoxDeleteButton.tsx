@@ -11,27 +11,18 @@ import Modal from "./UI/Modal"
 interface ICheckBoxDeleteButtonProps {
   label: string
   tableHeight?: Height
-  deleteExtractionOption?: (label: string) => void
-  isOptionDeleting?: boolean
 }
 
 const CheckBoxDeleteButton: React.FC<ICheckBoxDeleteButtonProps> = ({
   label,
   tableHeight,
-  deleteExtractionOption,
-  isOptionDeleting,
 }) => {
   const [isModalShow, setIsModalShow] = useState<boolean>(false)
 
   return (
     <>
       <Modal isModalShow={isModalShow} setIsModalShow={setIsModalShow}>
-        <ConfirmDeleteButtons
-          label={label}
-          setIsModalShow={setIsModalShow}
-          deleteFn={deleteExtractionOption}
-          isDeleting={isOptionDeleting}
-        />
+        <ConfirmDeleteButtons label={label} setIsModalShow={setIsModalShow} />
       </Modal>
       {!immutableLabels.includes(label) && (
         <>

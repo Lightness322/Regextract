@@ -1,6 +1,5 @@
 import Excel from "exceljs"
 
-// import { columns } from "../data/columns"
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 
 interface IUseUploadFileParams {
@@ -8,8 +7,6 @@ interface IUseUploadFileParams {
   setIsFileLoading: (isLoading: boolean) => void
   setWorkbook: (workbook: Excel.Workbook) => void
   setSheet: (sheet: Excel.Worksheet) => void
-  // setPatternColumn: (column: string[]) => void
-  // productsColumnLetter: string
   setIsFileTypeWrong: TypeSetStateFunction<boolean>
 }
 
@@ -18,8 +15,6 @@ export function useUploadFile({
   setIsFileLoading,
   setWorkbook,
   setSheet,
-  // setPatternColumn,
-  // productsColumnLetter,
   setIsFileTypeWrong,
 }: IUseUploadFileParams) {
   const uploadFile = async function (file: File) {
@@ -43,18 +38,6 @@ export function useUploadFile({
         const tableFile = await workbook.xlsx.load(buffer)
         const sheet = tableFile.getWorksheet(1)
         setSheet(sheet!)
-
-        // const productsColumn = sheet!.getColumn(
-        //   columns.indexOf(productsColumnLetter) + 1
-        // ).values
-
-        // const patternArray: string[] = []
-
-        // for (let i = 1; i < productsColumn.length; i++) {
-        //   patternArray.push(String(productsColumn.at(i)))
-        // }
-
-        // setPatternColumn(patternArray)
       }
 
       setIsFileLoading(false)

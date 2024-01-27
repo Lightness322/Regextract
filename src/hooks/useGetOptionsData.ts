@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
+import { useUserId } from "./useUserId"
 
 import { getQuantities } from "../services/apiQuantities"
 import { getMeasures } from "../services/apiMeasures"
@@ -9,13 +10,15 @@ import { IMeasuresResponse } from "../types/measuresTypes"
 import { IWordsResponse } from "../types/wordsTypes"
 
 export function useGetOptionsData() {
+  const { userId } = useUserId()
+
   const {
     data: measuresData,
     isLoading: isMeasuresLoading,
     error: measuresError,
   }: IMeasuresResponse = useQuery({
     queryKey: ["measures"],
-    queryFn: getMeasures,
+    queryFn: () => getMeasures(userId),
   })
 
   const {
@@ -24,7 +27,7 @@ export function useGetOptionsData() {
     error: wordsError,
   }: IWordsResponse = useQuery({
     queryKey: ["words"],
-    queryFn: getWords,
+    queryFn: () => getWords(userId),
   })
 
   const {
@@ -33,7 +36,7 @@ export function useGetOptionsData() {
     error: quantitiesError,
   }: IQuantityResponse = useQuery({
     queryKey: ["quantities"],
-    queryFn: getQuantities,
+    queryFn: () => getQuantities(userId),
   })
 
   const optionsData = { measuresData, wordsData, quantitiesData }

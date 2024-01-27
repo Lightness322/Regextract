@@ -10,16 +10,12 @@ interface ICheckBoxButtonsProps {
   label: string
   tableHeight?: Height
   handleShowOptions?: () => void
-  deleteExtractionOption?: (label: string) => void
-  isOptionDeleting?: boolean
 }
 
 const CheckBoxButtons: React.FC<ICheckBoxButtonsProps> = ({
   handleShowOptions,
   label,
   tableHeight,
-  deleteExtractionOption,
-  isOptionDeleting,
 }) => {
   return (
     <>
@@ -34,12 +30,7 @@ const CheckBoxButtons: React.FC<ICheckBoxButtonsProps> = ({
         <IoSettingsOutline size="24" />
       </button>
       {label === "Извлечь цвета" && <Tip tip={extractColorsTip} />}
-      <CheckBoxDeleteButton
-        label={label}
-        tableHeight={tableHeight}
-        deleteExtractionOption={deleteExtractionOption}
-        isOptionDeleting={isOptionDeleting}
-      />
+      <CheckBoxDeleteButton label={label} tableHeight={tableHeight} />
     </>
   )
 }

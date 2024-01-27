@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-
 import { useChangeQuantityOptionValues } from "../hooks/useChangeQuantityOptionValues"
 import { useChangeQuantityOption } from "../hooks/useChangeQuantityOption"
+import { useUserId } from "../hooks/useUserId"
 
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IQuantity } from "../types/quantitiesTypes"
@@ -33,6 +33,8 @@ const QuantitiesOption: React.FC<IQuantitiesOptionProps> = ({
 
   const { handleChangeVariantsAfterNum, handleChangeVariantsBeforeNum } =
     useChangeQuantityOptionValues({ setCurrentQuantities })
+
+  const { userId } = useUserId()
 
   useEffect(() => {
     if (JSON.stringify(currentQuantities) === JSON.stringify(quantities)) {
@@ -66,8 +68,9 @@ const QuantitiesOption: React.FC<IQuantitiesOptionProps> = ({
         buttonHeight={saveButtonHeight}
         updateFn={() =>
           updateQuantities({
-            label: "Извлечение количества",
+            label: "Извлечь количество",
             params: currentQuantities,
+            userId,
           })
         }
         isUpdating={isQuantitiesUpdating}

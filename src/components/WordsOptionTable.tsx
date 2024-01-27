@@ -1,12 +1,13 @@
 import { useChangeWordOptionValues } from "../hooks/useChangeWordOptionValues"
 
+import { checkDuplicates } from "../utils/helpers"
+
 import { TypeSetStateFunction } from "../types/TypeSetStateFunction"
 import { IWord } from "../types/wordsTypes"
-import { checkDuplicates } from "../utils/helpers"
+import AnimateHeight, { Height } from "react-animate-height"
 
 import { CiSquarePlus } from "react-icons/ci"
 import { IoClose } from "react-icons/io5"
-import AnimateHeight, { Height } from "react-animate-height"
 
 interface IWordsOptionTableProps {
   optionTableHeight: Height
