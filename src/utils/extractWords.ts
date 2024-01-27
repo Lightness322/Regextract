@@ -1,6 +1,10 @@
 import { IWord } from "../types/wordsTypes"
 
-export function extractWords(patternArray: string[], words: IWord[]) {
+export function extractWords(
+  patternArray: string[],
+  words: IWord[],
+  isStrictWords: boolean
+) {
   const regExpWordColumn = patternArray.map((patternString) => {
     const matchResultArray: string[] = []
 
@@ -19,9 +23,9 @@ export function extractWords(patternArray: string[], words: IWord[]) {
 
       if (patternString.match(reg) !== null) {
         matchResultArray.push(
-          `(?=.*(([^0-9а-яa-z]|^)${
+          `(?=.*(${isStrictWords ? "([^0-9а-яa-z]|^)" : ""}${
             words.at(indexOfWord)!.variants
-          }([^0-9а-яa-z]|$)))`
+          }${isStrictWords ? "([^0-9а-яa-z]|$)" : ""}))`
         )
       }
       indexOfWord++

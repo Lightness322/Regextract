@@ -2,15 +2,15 @@ import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IMeasureData } from "../types/measuresTypes"
 import { IQuantityData } from "../types/quantitiesTypes"
 
-import { extractMeasuresTip } from "../data/tips"
+import { extractMeasuresTip, extractSizesTip } from "../data/tips"
 
 import { CiSquarePlus } from "react-icons/ci"
-import SwapSizesButton from "./UI/SwapSizesButton"
+import { RiSwapBoxLine } from "react-icons/ri"
+import AdditionalFormSetting from "./UI/AdditionalFormSetting"
+import QuantitiesOption from "./QuantitiesOption"
 import MeasuresOption from "./MeasuresOption"
 import CheckBox from "./CheckBox"
 import Tip from "./UI/Tip"
-
-import QuantitiesOption from "./QuantitiesOption"
 
 interface IExtractionMeasureFieldProps {
   register: UseFormRegister<FieldValues>
@@ -58,7 +58,13 @@ const ExtractionMeasureField: React.FC<IExtractionMeasureFieldProps> = ({
               formValue="sizes"
               register={register}
             ></CheckBox>
-            <SwapSizesButton register={register} />
+            <AdditionalFormSetting
+              positioning="absolute left-[185px] top-[2px]"
+              formTitle="isSwapSizes"
+              btnComponent={<RiSwapBoxLine size="25" />}
+              register={register}
+              tip={extractSizesTip}
+            />
           </div>
         </div>
       </div>

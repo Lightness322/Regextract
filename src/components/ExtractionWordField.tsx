@@ -1,7 +1,11 @@
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IWordData } from "../types/wordsTypes"
 
+import { strictWordsTip } from "../data/tips"
+
 import { CiSquarePlus } from "react-icons/ci"
+import { BsCodeSlash } from "react-icons/bs"
+import AdditionalFormSetting from "./UI/AdditionalFormSetting"
 import WordsOption from "./WordsOption"
 import Tip from "./UI/Tip"
 
@@ -18,8 +22,15 @@ const ExtractionWordField: React.FC<IExtractionWordFieldProps> = ({
 }) => {
   return (
     <div>
-      <div className="text-2xl font-semibold mb-3 flex gap-x-4 items-center">
-        <span>Извлечение слов</span>
+      <div className="text-2xl font-semibold mb-3 flex gap-x-4 items-center relative">
+        <span className="mr-8">Извлечение слов</span>
+        <AdditionalFormSetting
+          positioning="absolute left-[214px] top-[6.5px]"
+          register={register}
+          tip={strictWordsTip}
+          formTitle="isStrictWords"
+          btnComponent={<BsCodeSlash size="25" />}
+        />
         <Tip tip="В столбце 'Слова' указываются вариации слов через '|'." />
         <button
           className="text-green-700 hover:text-green-500"

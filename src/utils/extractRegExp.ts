@@ -50,7 +50,9 @@ export function extractRegExp({
       formData[formatLabel(wordObj.label)] &&
       wordObj.label !== "Извлечь цвета"
     ) {
-      regExpsArray.push(extractWords(patternColumn, wordObj.params))
+      regExpsArray.push(
+        extractWords(patternColumn, wordObj.params, formData.isStrictWords)
+      )
     }
   })
 
