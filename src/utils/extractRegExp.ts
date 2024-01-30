@@ -43,7 +43,9 @@ export function extractRegExp({
       formData[formatLabel(wordObj.label)] &&
       wordObj.label === "Извлечь цвета"
     ) {
-      regExpsArray.push(extractColors(patternColumn, wordObj.params))
+      regExpsArray.push(
+        extractColors(patternColumn, wordObj.params, formData.isStrictWords)
+      )
     }
 
     if (
@@ -58,7 +60,11 @@ export function extractRegExp({
 
   formData.quantities &&
     regExpsArray.push(
-      extractQuantity(patternColumn, quantitiesData!.at(0)!.params)
+      extractQuantity(
+        patternColumn,
+        quantitiesData!.at(0)!.params,
+        formData.isDeclineQuantities
+      )
     )
 
   formData.sizes &&

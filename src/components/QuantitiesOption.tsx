@@ -3,12 +3,16 @@ import { useChangeQuantityOptionValues } from "../hooks/useChangeQuantityOptionV
 import { useChangeQuantityOption } from "../hooks/useChangeQuantityOption"
 import { useUserId } from "../hooks/useUserId"
 
+import { declineQuantitiesTip } from "../data/tips"
+
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import { IQuantity } from "../types/quantitiesTypes"
 
 import AnimateHeight, { Height } from "react-animate-height"
+import { MdOutlineGppMaybe } from "react-icons/md"
 import CheckBox from "./CheckBox"
 import SaveButton from "./UI/SaveButton"
+import AdditionalFormSetting from "./UI/AdditionalFormSetting"
 
 interface IQuantitiesOptionProps {
   quantities: IQuantity
@@ -56,7 +60,7 @@ const QuantitiesOption: React.FC<IQuantitiesOptionProps> = ({
   }
 
   return (
-    <div>
+    <div className="relative">
       <CheckBox
         label="Извлечь количество"
         formValue="quantities"
@@ -64,6 +68,13 @@ const QuantitiesOption: React.FC<IQuantitiesOptionProps> = ({
         tableHeight={optionTableHeight}
         handleShowOptions={handleShowOptions}
       ></CheckBox>
+      <AdditionalFormSetting
+        positioning="absolute left-[220px] top-[1px]"
+        formTitle="isDeclineQuantities"
+        btnComponent={<MdOutlineGppMaybe size="27" />}
+        register={register}
+        tip={declineQuantitiesTip}
+      />
       <SaveButton
         buttonHeight={saveButtonHeight}
         updateFn={() =>

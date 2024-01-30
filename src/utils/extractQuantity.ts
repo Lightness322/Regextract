@@ -1,7 +1,11 @@
 import { possibleMeasures } from "../data/possibleMeasures"
 import { IQuantity } from "../types/quantitiesTypes"
 
-export function extractQuantity(patternArray: string[], quantities: IQuantity) {
+export function extractQuantity(
+  patternArray: string[],
+  quantities: IQuantity,
+  isDeclineQuantities: boolean
+) {
   const regExpQuantityColumn = patternArray.map((patternString) => {
     let checkMeasureString: string = ""
     let quantity: number = 0
@@ -54,11 +58,16 @@ export function extractQuantity(patternArray: string[], quantities: IQuantity) {
         quantitiesArray.push(quantity)
     })
 
-    if (quantitiesArray.length === 0) return ""
-
-    if (quantitiesArray.length === 1 && quantitiesArray.at(0) === 1) {
-      return `(?=.*((([^0-9а-яa-z]|^)1\\s*(${quantities.variantsAfterNumber})([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(${quantities.variantsBeforeNumber})\\s*1([^0-9а-яa-z]|$)))|^(?!.*(?=.*((\\d+\\s*(шт|бр|tabs|caps|капс|табл|доз|пара?)([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(x|х|№)\\s*\\d+([^0-9а-яa-z]|$)))).*$))`
+    if (!isDeclineQuantities && quantitiesArray.length === 0) {
+      return ""
     }
+
+    if (
+      isDeclineQuantities &&
+      (quantitiesArray.length === 0 ||
+        (quantitiesArray.length === 1 && quantitiesArray.at(0) === 1))
+    )
+      return `(?=.*(^(?!.*((([2-9]|\\d\\d+)\\s*(${quantities.variantsAfterNumber})([^0-9а-яa-z]|$))|(([^0-9а-яa-z]|^)(${quantities.variantsBeforeNumber})\\s*([2-9]|[1-9]\\d+)[,.;\\s()$-])).*$)))`
 
     quantitiesArray = quantitiesArray.filter((quantity) => quantity !== 1)
 

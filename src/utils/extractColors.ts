@@ -1,6 +1,10 @@
 import { IWord } from "../types/wordsTypes"
 
-export function extractColors(patternArray: string[], words: IWord[]) {
+export function extractColors(
+  patternArray: string[],
+  words: IWord[],
+  isStrictWords: boolean
+) {
   const regExpColorColumn = patternArray.map((patternString) => {
     const matchResultArray: string[] = []
 
@@ -38,9 +42,9 @@ export function extractColors(patternArray: string[], words: IWord[]) {
 
         if (matchResult && !modifier) {
           matchResultArray.push(
-            `(?=.*(([^0-9а-яa-z]|^)${
+            `(?=.*(${isStrictWords ? "([^0-9а-яa-z]|^)" : ""}${
               words.at(indexOfColor)!.variants
-            }([^0-9а-яa-z]|$)))`
+            }${isStrictWords ? "([^0-9а-яa-z]|$)" : ""}))`
           )
         }
 
